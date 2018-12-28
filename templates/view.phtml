@@ -1,0 +1,28 @@
+<h3>Maturitní kánony</h3>
+<hr />
+<div class="panel panel-default">
+<div class="panel-heading">
+    <strong>Mé kánony</strong>
+    <span class="pull-right"><a href="<?=$router->pathFor('lists-edit');?>"><span class="glyphicon glyphicon-plus"></span> Vytvořit nový kánon</a></span>
+</div>
+<div class="panel-body">
+<?php if (is_array($lists) && count($lists)):?>
+    <ul class='list-group'>
+    <?php foreach($lists as $info):?>
+    <li class='list-group-item'>
+        <a href='<?=$info['state']==0?$router->pathFor('lists-edit', ['id' => $info['id']]):$router->pathFor('lists-preview', ['id' => $info['id']])?>'><?=date("d. m. Y - G:i", $info['created'])?></a>
+    <?php if ($info['state'] == 0):?>
+        <span class='label label-info pull-right'>Upravován</span>
+    <?php elseif ($info['state'] == 1):?>
+        <span class='label label-primary pull-right'>Odevzdán</span>
+    <?php elseif ($info['state'] == 2):?>
+        <span class='label label-success pull-right'>Schválen</span>
+    <?php endif;?>
+    </li>
+    <?php endforeach;?>
+    </ul>
+<?php else:?>
+    <span class='text-muted'>Žádné kánony nevytvořeny</span>
+<?php endif?>
+</div>
+</div>

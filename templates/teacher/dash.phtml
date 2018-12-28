@@ -1,0 +1,47 @@
+<div class="col-md-12">
+<h3>Maturitní kánon <small>učitel</small></h3>
+<hr />
+</div>
+<div class="col-md-4 text-center">
+    <?php if ($allowAccepting):?>
+    <a href="<?=$router->pathFor('lists-teacher-accept')?>" class="btn btn-lg btn-success">Schvalování kánonů</a>
+    <?php else:?>
+    <button class="btn btn-lg btn-success disabled">Schvalování kánonů</button>
+    <?php endif;?>
+    <br /><br />
+    <a href="<?=$router->pathFor('lists-teacher-view')?>" class="btn btn-default">Seznam studentů</a>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+    <strong>Seznam knih</strong>
+        <div class="pull-right">
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('list-expand', 'dash-admin')?></a>
+        </div>
+    </div>
+    <?php if (is_array($count) && count($count)):?>
+    <div class="panel-body collapse" id="collapse-list">
+    <table class="table">
+    <thead>
+        <tr><th>Kniha</th><th>Autor</th><th>Počet</th></tr>
+    </thead>
+    <tbody>
+        <?php foreach($count as $id => $entry):?>
+            <tr><td><?=$books[$id]['author']?></td><td><?=$books[$id]['name']?></td><td><?=$entry?></td></tr>
+        <?php endforeach;?>
+    </tbody>
+    </table>
+    <?php else:?>
+    <div class="panel-body collapse in" id="collapse-list">
+        <span class='text-muted'>Žádné kánony neschváleny</span>
+    <?php endif?>
+    </div>
+    </div>
+</div>
+<script>
+$('#toggle-list').click(function(){
+    $(this).text(function(i,old){
+        return old == "<?=$lang->g('list-expand', 'dash-admin')?>" ? "<?=$lang->g('list-collapse', 'dash-admin')?>" : "<?=$lang->g('list-expand', 'dash-admin')?>";
+    });
+});
+</script><?=$lang->g('', 'dash-admin')?>

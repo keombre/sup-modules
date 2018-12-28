@@ -1,0 +1,118 @@
+<div class="col-md-12">
+<h3>Maturitní kánon <small>admin</small></h3>
+<hr />
+</div>
+<div class="col-md-5">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Založit novou verzi kánonu</strong>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal"  enctype="multipart/form-data" method="post" action="<?=$router->pathFor('lists-admin-create')?>">
+            <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+            <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+            <input type="hidden" name="_METHOD" value="PUT" />
+            <p><?=$lang->g('upload-expected', 'dash-admin')?>
+            <br />
+            <pre>[region id];[author];[name];[genere id]</pre>
+            </p>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="name">Název verze:</label>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" name="name" id="name" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="class">Kánon:</label>
+                <div class="col-md-8">
+                    <input type="file" name="book"/><br />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <input class="btn btn-primary" type="submit" value="Založit novou verzi">
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Verze kánonů</strong>
+        <div class="pull-right">
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('list-expand', 'dash-admin')?></a>
+        </div>
+    </div>
+    <?php if (is_array($versions) && count($versions)):?>
+    <div class="panel-body collapse" id="collapse-list">
+        <ul class='list-group'>
+        <?php foreach($versions as $version):?>
+        <li class='list-group-item'>
+            <a href="<?=$router->pathFor('lists-admin-manage', ['id' => $version['id']])?>"><?=$version['name']?></a>
+        </li>
+        <?php endforeach;?>
+        </ul>
+    <?php else:?>
+    <div class="panel-body collapse in" id="collapse-list">
+        <span class='text-muted'>Žádné verze nevytvořeny</span>
+    <?php endif?>
+    </div>
+    </div>
+</div>
+<script>
+$('#toggle-list').click(function(){
+    $(this).text(function(i,old){
+        return old == "<?=$lang->g('list-expand', 'dash-admin')?>" ? "<?=$lang->g('list-collapse', 'dash-admin')?>" : "<?=$lang->g('list-expand', 'dash-admin')?>";
+    });
+});
+</script><?=$lang->g('', 'dash-admin')?>
+
+<div class="col-md-5 col-md-offset-2">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong>Nastavení</strong>
+    </div>
+    <div class="panel-body">
+    <form class="form-horizontal" method="post" action="<?=$router->pathFor('lists-admin-settings')?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="active">Aktivní verze</label>
+            <div class="col-md-6">
+                <select class="form-control" name="active" required>
+                    <option disabled selected value="">Zvolte verzi</option>
+                    <?php foreach ($versions as $version):?>
+                    <option value="<?=$version['id']?>" <?=@$settings['active_version'] == $version['id']?'selected':''?>><?=$version['name']?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="edit">Tvorba kánonů</label>
+            <div class="col-md-6">
+                <input type="checkbox" <?=@$settings['open_editing']?'checked':''?> name="edit" data-on="otevřena" data-off="uzavřena" data-onstyle="info" data-offstyle="danger" data-toggle="toggle">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="accept">Schvalování kánonů</label>
+            <div class="col-md-6">
+                <input type="checkbox" <?=@$settings['open_accepting']?'checked':''?> name="accept" data-on="povoleno" data-off="zakázáno" data-onstyle="info" data-offstyle="danger" data-toggle="toggle">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="draw">Losování</label>
+            <div class="col-md-6">
+                <input type="checkbox" <?=@$settings['open_drawing']?'checked':''?> name="draw" data-on="povoleno" data-off="zakázáno" data-onstyle="success" data-offstyle="warning" data-toggle="toggle">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-7 col-md-offset-5">
+                <input class="btn btn-primary" type="submit" value="Uložit nastavení">
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,20 @@
+<div class="col-md-12">
+<h3>Schválení kánonu
+    <a href="<?=$router->pathFor('lists')?>" class="btn btn-default pull-right">Zpět</a>
+</h3>
+<hr />
+<form id="form" method="POST" class="form form-horizontal">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <div class="form-group">
+        <label for="form_value" class="control-label col-sm-offset-2 col-sm-2">Kód kánonu:</label>
+        <div class="col-sm-4">
+            <input type="text" name="code" class="form-control" id="form_value" autofocus />
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-default">Schválit</button>
+        </div>
+    </div>
+</form>
+</div>

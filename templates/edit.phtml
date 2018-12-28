@@ -1,0 +1,127 @@
+<?php if (is_array(@$message)):?>
+	<div id="infoModal" class="modal fade in" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><?=$message[0]['title']?></h4>
+				</div>
+				<div class="modal-body">
+					<?=$message[0]['message']?>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Zavřít</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php endif;?>
+<div class="col-md-12">
+<h3>Úprava kánonu <small>změny jsou průběžně ukládány</small>
+    <a href="<?=$router->pathFor('lists')?>" class="btn btn-default pull-right">Zpět</a>
+</h3>
+<hr />
+</div>
+<div class="main">
+	<div class="col-md-6">
+		<form id="form-add" method="post">
+		<input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+		<input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+		<input type="hidden" name="_METHOD" value="PUT" />
+		<div class="form-group">
+			<label for="books[]"><?=$lang->g('main-list', 'list-edit')?></label>
+			<input id="search" class="form-control" placeholder="<?=$lang->g('search', 'list-edit')?>" autofocus />
+			<br />
+			<select name="books[]" id="books" multiple="multiple" class="form-control" size="25" ondblclick="send_add()">
+			<?php foreach($books as $rid => $book):?>
+				<optgroup label='<?=array_key_exists($rid, $regions)?$regions[$rid]:$lang->g('unknown-region', 'list-edit') . " " . $rid?>'>
+				<?php foreach($book as $id => $info):?>
+					<option value='<?=$id?>'><?=$info['author'] == ''?"":$info['author'] . ": "?><?=$info['name']?><?=array_key_exists($info['genere'], $generes)?" (".$generes[$info['genere']].")":""?></option>
+				<?php endforeach;?>
+				</optgroup>
+				<?php endforeach;?>
+			</select>
+		</div>
+		</form>
+	</div>
+	<div class="col-md-2">
+		<div class="my-buttons">
+			<button class="form-control btn btn-default" onclick="$('#form-add').submit()">
+			    <?=$lang->g('add', 'list-edit')?> <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+			</button>
+			<button class="form-control btn btn-default" onclick="$('#form-del').submit()">
+				<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> <?=$lang->g('remove', 'list-edit')?>
+			</button>
+			<button class="form-control btn btn-danger" data-toggle="modal" data-target="#clearModal" onclick="return false;">
+				<span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> <?=$lang->g('wipe', 'list-edit')?>
+			</button>
+		</div>
+	</div>
+	<div class="col-md-4">
+		<form id="form-del" method="post">
+		<input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+		<input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+		<input type="hidden" name="_METHOD" value="DELETE" />
+		<div class="form-group">
+			<label for="books[]"><?=$lang->g('my-list', 'list-edit')?> (<?=$listLength?>/20)</label>
+			<select name="books[]" id="myBooks" multiple="multiple" class="form-control" size="26" ondblclick="send_del()">
+			<?php foreach($list as $rid => $book):?>
+				<optgroup label='<?=array_key_exists($rid, $regions)?$regions[$rid]:$lang->g('unknown-region', 'list-edit') . " " . $rid?>'>
+				<?php foreach($book as $id => $info):?>
+				<option value='<?=$id?>'><?=$info['author'] == ''?"":$info['author'] . ": "?><?=$info['name']?><?=array_key_exists($info['genere'], $generes)?" (".$generes[$info['genere']].")":""?></option>
+				<?php endforeach;?>
+				</optgroup>
+			<?php endforeach;?>
+			</select>
+			<br />
+		</div>
+		</form>
+		<a href="<?=is_numeric($listID)?$router->pathFor('lists-validate', ['id' => $listID]):'#'?>" class="form-control btn btn-success">
+			<?=$lang->g('finish', 'list-edit')?> <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+		</a>
+	</div>
+</div>
+</div>
+<div id="clearModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title"><?=$lang->g('title-wipe', 'list-edit')?></h4>
+		</div>
+		<div class="modal-body">
+			<p><?=$lang->g('text-wipe', 'list-edit')?></p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-danger pull-left" onclick="$('#myBooks option').prop('selected', true);$('#form-del').submit()"><?=$lang->g('submit-wipe', 'list-edit')?></button>
+			<button type="button" class="btn btn-default" data-dismiss="modal"><?=$lang->g('cancel-wipe', 'list-edit')?></button>
+		</div>
+	</div>
+</div>
+</div>
+<script>
+$.fn.scrollPosReaload = function() {
+    if (localStorage) {
+        let posReader = localStorage["posStorage"]
+        if (posReader) {
+            $(this).scrollTop(posReader);
+            localStorage.removeItem("posStorage")
+        }
+        $(this).click(function(e) {
+            localStorage["posStorage"] = $(this).scrollTop()
+        })
+    }
+    return this
+}
+$(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+	$('#infoModal').modal('show');
+    $("#search").on("keyup", function() {
+        let value = $(this).val().toLowerCase()
+        $("#books option").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        })
+	})
+	$('#books').scrollPosReaload()
+})
+</script>

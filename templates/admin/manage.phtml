@@ -1,0 +1,124 @@
+<div class="col-md-5">
+    <h3>Kánon verze <?=$name?></h3>
+    <hr />
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('upload-title', 'dash-admin')?></strong>
+    </div>
+    <div class="panel-body">
+    <p><?=$lang->g('upload-expected', 'dash-admin')?>
+    <br />
+    <pre>[region id];[author];[name];[genere id]</pre>
+    </p>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$router->pathFor('lists-admin-manage', ["id" => $version], ['mode' => 'upl'])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <div class="col-md-12 form-group">
+        <input type="file" name="book" />
+        </div>
+        <div class="col-md-4 form-group">
+            <input type="submit" class="btn btn-default form-control" />
+        </div>
+    </form>
+    </div>
+    </div>
+    
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('list-title', 'dash-admin')?> (<?=count($books)?>)</strong>
+        <div class="pull-right">
+            <a href="#" class="btn btn-xs disabled" ><span class="glyphicon glyphicon-plus"></span> <?=$lang->g('list-add', 'dash-admin')?></a>
+            |
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('list-expand', 'dash-admin')?></a>
+        </div>
+    </div>
+    <div class="panel-body collapse" id="collapse-list">
+    <?php if (is_array($books) && count($books)):?>
+        <ul class='list-group'>
+        <?php foreach($books as $book):?>
+        <li class='list-group-item'>
+            <span style="width: 75%;display: inline-block;"><?=$book['author'] == ""?"":$book['author'] . ": "?><b><?=$book['name']?></b></span>
+            <a href="#" class='btn disabled btn-xs btn-danger pull-right'><?=$lang->g('list-remove', 'dash-admin')?></a>
+        </li>
+        <?php endforeach;?>
+        </ul>
+    <?php else:?>
+        <span class='text-muted'><?=$lang->g('list-empty', 'dash-admin')?></span>
+    <?php endif?>
+    </div>
+    </div>
+</div>
+
+<div class="col-md-5 col-md-offset-2">
+    <h3>Nastavení
+    <a href="<?=$router->pathFor('lists')?>" class="btn btn-default pull-right">Zpět</a>
+    </h3>
+    <hr />
+
+    <div class="panel panel-default">
+    <div class="panel-heading"><strong>Období</strong></div>
+    <div class="panel-body">
+    <p>Předpokládané názvy: <b>Literatura 18. století, atd.</b></p>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$router->pathFor('lists-admin-manage', ["id" => $version], ['mode' => 'reg'])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <?php foreach ($regionsCount as $regID):?>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="<?=$regID?>">č. <?=$regID?></label>
+                <div class="col-md-5" style="padding: 0 5px">
+                    <input class="form-control" type="text" name="reg[<?=$regID?>][name]" placeholder="Název"  value="<?=array_key_exists($regID, $regions)?$regions[$regID]['name']:''?>" required>
+                </div>
+                <div class="col-md-2" style="padding: 0 5px">
+                    <input class="form-control" type="text" name="reg[<?=$regID?>][min]" placeholder="Min" value="<?=array_key_exists($regID, $regions)?$regions[$regID]['min']:''?>">
+                </div>
+                <div class="col-md-2" style="padding: 0 5px">
+                    <input class="form-control" type="text" name="reg[<?=$regID?>][max]" placeholder="Max" value="<?=array_key_exists($regID, $regions)?$regions[$regID]['max']:''?>">
+                </div>
+            </div>
+        <?php endforeach;?>
+        <div class="col-md-4 form-group">
+            <input type="submit" class="btn btn-default form-control" />
+        </div>
+    </form>
+    </div>
+    </div>
+
+    <div class="panel panel-default">
+    <div class="panel-heading"><strong>Žánry</strong></div>
+    <div class="panel-body">
+    <p>Předpokládané názvy: <b>próza, poezie, atd.</b></p>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$router->pathFor('lists-admin-manage', ["id" => $version], ['mode' => 'gen'])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <?php foreach ($generesCount as $genID):?>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="<?=$genID?>">č. <?=$genID?></label>
+                <div class="col-md-5" style="padding: 0 5px">
+                    <input class="form-control" type="text" name="gen[<?=$genID?>][name]" placeholder="Název"  value="<?=array_key_exists($genID, $generes)?$generes[$genID]['name']:''?>" required>
+                </div>
+                <div class="col-md-2" style="padding: 0 5px">
+                    <input class="form-control" type="text" name="gen[<?=$genID?>][min]" placeholder="Min" value="<?=array_key_exists($genID, $generes)?$generes[$genID]['min']:''?>">
+                </div>
+                <div class="col-md-2" style="padding: 0 5px">
+                    <input class="form-control" type="text" name="gen[<?=$genID?>][max]" placeholder="Max" value="<?=array_key_exists($genID, $generes)?$generes[$genID]['max']:''?>">
+                </div>
+            </div>
+        <?php endforeach;?>
+        <div class="col-md-4 form-group">
+            <input type="submit" class="btn btn-default form-control" />
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+
+<script>
+$('#toggle-list').click(function(){
+    $(this).text(function(i,old){
+        return old == "<?=$lang->g('list-expand', 'dash-admin')?>" ? "<?=$lang->g('list-collapse', 'dash-admin')?>" : "<?=$lang->g('list-expand', 'dash-admin')?>";
+    });
+});
+</script>
