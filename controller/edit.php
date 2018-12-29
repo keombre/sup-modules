@@ -10,7 +10,7 @@ class edit extends lists {
 
         $data = $request->getParsedBody();
 
-        $state = $this->container->db->get('lists_main', 'state', ['id' => $this->listID]);
+        $state = $this->container->db->get('main', 'state', ['id' => $this->listID]);
         if ($state != 0)
             return $response->withRedirect($this->container->router->pathFor('lists-validate', ['id' => $this->listID]), 301);
 
@@ -22,7 +22,7 @@ class edit extends lists {
 
             $id = $this->getListID();
 
-            foreach ($this->container->db->select("lists_lists", "book", ["list" => $id]) as $remove)
+            foreach ($this->container->db->select("lists", "book", ["list" => $id]) as $remove)
                 if (in_array($remove, $books))
                     unset($books[array_search($remove, $books)]);
             
@@ -34,10 +34,10 @@ class edit extends lists {
             if (!count($save))
                 return $this->redirectWithMessage($response, 'lists-edit', "error", ["Chyba při ukládání knih"], ["id" => $this->listID]);
             
-            $this->container->db->insert("lists_lists", $save);
+            $this->container->db->insert("lists", $save);
 
             if (is_null($this->listID)) {
-                $this->container->db->insert("lists_main", [
+                $this->container->db->insert("main", [
                     "id" => $id,
                     "user" => $this->userID,
                     "created" => time(),
@@ -61,7 +61,7 @@ class edit extends lists {
             if (!count($books))
                 return $this->redirectWithMessage($response, 'lists-edit', "error", ["Žádné knihy nezvoleny"], ['id' => $this->listID]);
 
-            $this->container->db->delete("lists_lists", ["list" => $this->listID, "OR" => ["book" => $books]]);
+            $this->container->db->delete("lists", ["list" => $this->listID, "OR" => ["book" => $books]]);
             
             if ($this->removeEmptyList())
                 return $this->redirectWithMessage($response, 'lists', "status", ["Kánon smazán"]);
@@ -69,10 +69,10 @@ class edit extends lists {
         
         $listbooks = [];
         if (!is_null($this->listID))
-            $listbooks = $this->container->db->select("lists_lists", "book", ["list" => $this->listID, "ORDER" => "book"]);
+            $listbooks = $this->container->db->select("lists", "book", ["list" => $this->listID, "ORDER" => "book"]);
 
         $allbooks = [];
-        foreach ($this->container->db->select("lists_books", "*", ["version" => $this->settings['active_version']]) as $book)
+        foreach ($this->container->db->select("books", "*", ["version" => $this->settings['active_version']]) as $book)
             $allbooks[$book['id']] = $book;
         
         $books = [];
@@ -93,11 +93,11 @@ class edit extends lists {
             $books[$book['region']][$book['id']] = $book;
         }
 
-        $regions = array_column($this->container->db->select("lists_regions", "*"), 'name', 'id');
-        $generes = array_column($this->container->db->select("lists_generes", "*"), 'name', 'id');
+        $regions = array_column($this->container->db->select("regions", "*"), 'name', 'id');
+        $generes = array_column($this->container->db->select("generes", "*"), 'name', 'id');
         $listLength = count($listbooks);
         
-        $this->sendResponse($request, $response, "lists/edit.phtml", [
+        $this->sendResponse($request, $response, "edit.phtml", [
             "list" => $list,
             "books" => $books,
             "regions" => $regions,
@@ -110,9 +110,9 @@ class edit extends lists {
     }
 
     private function removeEmptyList() {
-        if ($this->container->db->has('lists_main', ['AND' => ['user' => $this->userID, 'id' => $this->listID]])) {
-            if (!$this->container->db->has('lists_lists', ['list' => $this->listID])) {
-                $this->container->db->delete('lists_main', ['id' => $this->listID]);
+        if ($this->container->db->has('main', ['AND' => ['user' => $this->userID, 'id' => $this->listID]])) {
+            if (!$this->container->db->has('lists', ['list' => $this->listID])) {
+                $this->container->db->delete('main', ['id' => $this->listID]);
                 return true;
             }
         }
@@ -122,7 +122,7 @@ class edit extends lists {
     private function getListID() {
         if (!is_null($this->listID)) return $this->listID;
         do $id = rand(100000, 999999);
-        while ($this->container->db->has("lists_main", ["id" => $id]));
+        while ($this->container->db->has("main", ["id" => $id]));
         return $id;
     }
 }

@@ -9,7 +9,7 @@ class view extends \sup\controller {
     function __construct(\Slim\Container $container) {
         parent::__construct($container);
         
-        $this->settings = $this->db->get("lists_settings", "*");
+        $this->settings = $this->db->get("settings", "*");
     }
 
     function __invoke($request, $response, $args) {
@@ -29,13 +29,13 @@ class view extends \sup\controller {
                 'userinfo.class [String]'
             ], ['users.role[~]' => ROLE_STUDENT]);
             foreach ($students as $id => $student)
-                $students[$id]['list'] = $this->db->get('lists_main', 'id', [
+                $students[$id]['list'] = $this->db->get('main', 'id', [
                     'version' => $this->settings['active_version'],
                     'user' => $student['id'],
                     'state' => 2
                 ]);
             
-            $response = $this->sendResponse($request, $response, "lists/teacher/view.phtml", ["students" => $students]);
+            $response = $this->sendResponse($request, $response, "teacher/view.phtml", ["students" => $students]);
         }
         return $response;
     }

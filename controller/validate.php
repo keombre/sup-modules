@@ -5,7 +5,7 @@ namespace modules\lists\controller;
 class validate extends lists {
 
     public function student($request, &$response, $args) {
-        $state = $this->container->db->get('lists_main', 'state', ['id' => $this->listID]);
+        $state = $this->container->db->get('main', 'state', ['id' => $this->listID]);
 
         if ($state == 0) {
             if (!$this->validate($response))
@@ -16,7 +16,7 @@ class validate extends lists {
         
         if ($request->isPut()) {
             if ($state == 0) {
-                $this->container->db->update("lists_main", ["state" => 1], ["id" => $this->listID]);
+                $this->container->db->update("main", ["state" => 1], ["id" => $this->listID]);
                 return $this->redirectWithMessage($response, 'lists-preview', "status", ["Kánon odeslán"], ["id" => $this->listID]);
             }
         }
@@ -28,7 +28,7 @@ class validate extends lists {
     public function admin($request, &$response, $args) {}
 
     private function validate(&$response) {
-        $list = $this->container->db->select("lists_lists", "book", ["list" => $this->listID]);
+        $list = $this->container->db->select("lists", "book", ["list" => $this->listID]);
         
         if (count($list) != 20) {
             $this->redirectWithMessage($response, 'lists-edit', "error", ["Nezvolili jste 20 knih"], ["id" => $this->listID]);
@@ -36,7 +36,7 @@ class validate extends lists {
         }
         
         $books = [];
-        foreach ($this->container->db->select("lists_books", "*") as $book) {
+        foreach ($this->container->db->select("books", "*") as $book) {
             $books[$book['id']] = $book;
         }
 
@@ -47,19 +47,19 @@ class validate extends lists {
         $genereInfo = [];
         $regionInfo = [];
 
-        foreach ($this->container->db->select("lists_generes", "*") as $genere) {
+        foreach ($this->container->db->select("generes", "*") as $genere) {
             $genereCounter[$genere['id']] = 0;
             $genereInfo[$genere['id']] = $genere;
         }
 
-        foreach ($this->container->db->select("lists_regions", "*") as $region) {
+        foreach ($this->container->db->select("regions", "*") as $region) {
             $regionCounter[$region['id']] = 0;
             $regionInfo[$region['id']] = $region;
         }
 
         foreach ($list as $book) {
             if (!array_key_exists($book, $books)) {
-                $this->container->db->delete("lists_lists", ["list" => $this->listID, "book" => $book]);
+                $this->container->db->delete("lists", ["list" => $this->listID, "book" => $book]);
             }
             
             if (!array_key_exists($books[$book]['author'], $authorCounter))
@@ -109,8 +109,8 @@ class validate extends lists {
     private function getListID($args) {
         if (array_key_exists('id', @$args)) {
             $id = filter_var(@$args['id'], FILTER_SANITIZE_STRING);
-            $version = $this->container->db->get("lists_settings", "active_version");
-            if ($this->container->db->has("lists_main", ["id" => $id, "user" => $this->userID, "version" => $version]))
+            $version = $this->container->db->get("settings", "active_version");
+            if ($this->container->db->has("main", ["id" => $id, "user" => $this->userID, "version" => $version]))
                 $this->listID = $id;
         } else
             $this->listID = true;

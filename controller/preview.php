@@ -7,7 +7,7 @@ class preview extends lists {
     protected $state = null;
 
     public function student($request, &$response, $args) {
-        $state = $this->db->get('lists_main', 'state', ['id' => $this->listID]);
+        $state = $this->db->get('main', 'state', ['id' => $this->listID]);
 
         if ($state == 0)
             return $response->withRedirect($this->container->router->pathFor('lists-edit', ["id" => $this->listID]), 301);
@@ -25,9 +25,9 @@ class preview extends lists {
 
     public function preview($request, &$response, $args) {
         
-        $versionName = $this->db->get('lists_versions', 'name [String]', ['id' => $this->settings['active_version']]);
+        $versionName = $this->db->get('versions', 'name [String]', ['id' => $this->settings['active_version']]);
 
-        $list = $this->db->get('users', ['[>]userinfo' => 'id', '[>]lists_main' => ['id' => 'user']], [
+        $list = $this->db->get('users', ['[>]userinfo' => 'id', '[>]main' => ['id' => 'user']], [
             'user' => [
                 'users.name(code) [String]',
                 'name' => [
@@ -36,15 +36,15 @@ class preview extends lists {
                 ],
                 'userinfo.class [String]'
             ],
-            'lists_main.state [Int]',
-            'lists_main.id [Int]'
-        ], ['lists_main.id' => $this->listID]);
+            'main.state [Int]',
+            'main.id [Int]'
+        ], ['main.id' => $this->listID]);
 
-        $list['books'] = $this->db->select('lists_lists', ['[>]lists_books' => ['book' => 'id']], [
-            'lists_books.id [Int]',
-            'lists_books.name [String]',
-            'lists_books.author [String]'
-        ], ['lists_lists.list' => $this->listID, 'ORDER' => 'lists_books.id']);
+        $list['books'] = $this->db->select('lists', ['[>]books' => ['book' => 'id']], [
+            'books.id [Int]',
+            'books.name [String]',
+            'books.author [String]'
+        ], ['lists.list' => $this->listID, 'ORDER' => 'books.id']);
 
         $qrURL = (string) $request
                 ->getUri()
@@ -59,7 +59,7 @@ class preview extends lists {
         $generatorPNG = new \Picqer\Barcode\BarcodeGeneratorPNG();
         $barcode = base64_encode($generatorPNG->getBarcode($this->formatBarcode($list), $generatorPNG::TYPE_CODE_39E, 1.5));
 
-        $this->sendResponse($request, $response, "lists/preview.phtml", [
+        $this->sendResponse($request, $response, "preview.phtml", [
             "barcode" => $barcode,
             "qrcode" => $qrcode,
             "versionName" => $versionName,

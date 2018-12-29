@@ -12,7 +12,7 @@ class listID extends \sup\middleware {
             return $next($request, $response);
         
         $id = filter_var($listID, FILTER_SANITIZE_STRING);
-        $version = $this->container->db->get("lists_settings", "active_version");
+        $version = $this->container->db->get("settings", "active_version");
 
         if (!is_numeric($version))
             return $response->withRedirect($this->container->router->pathFor('lists'), 301);
@@ -20,12 +20,12 @@ class listID extends \sup\middleware {
         if ($this->container->auth->user->level(ROLE_STUDENT)) {
             $userID = $this->container->auth->user->getInfo('id');
 
-            if ($this->container->db->has("lists_main", ["id" => $id, "user" => $userID, "version" => $version]))
+            if ($this->container->db->has("main", ["id" => $id, "user" => $userID, "version" => $version]))
                 return $next($request, $response);
             else
                 return $this->redirectWithMessage($response, 'lists', "error", ["Kánon nenalezen"]);
         } else if ($this->container->auth->user->level([ROLE_TEACHER, ROLE_ADMIN])) {
-            if ($this->container->db->has("lists_main", ["id" => $id, "version" => $version]))
+            if ($this->container->db->has("main", ["id" => $id, "version" => $version]))
                 return $next($request, $response);
             else
                 return $this->redirectWithMessage($response, 'lists', "error", ["Kánon nenalezen"]);

@@ -9,7 +9,7 @@ final class manage extends upload {
         $data = $request->getParsedBody();
         $version = filter_var($args['id'], FILTER_SANITIZE_STRING);
         
-        if (!$this->db->has('lists_versions', ["id" => $version]))
+        if (!$this->db->has('versions', ["id" => $version]))
             return $this->redirectWithMessage($response, 'lists', "error", ["Verze nenalezena"]);
         
         $status = null;
@@ -33,15 +33,15 @@ final class manage extends upload {
                         "version" => $version
                     ]);
                 }
-                $this->db->delete("lists_books", ["version" => $version]);
-                $this->db->insert("lists_books", $save);
+                $this->db->delete("books", ["version" => $version]);
+                $this->db->insert("books", $save);
                 return $this->redirectWithMessage($response, 'lists-admin-manage', "status", [count($save) . " knih nahráno"], ["id" => $version]);
             } else if ($mode == 'reg' || $mode == 'gen') {
                 
                 if (!is_array(@$data[$mode]))
                     return $this->redirectWithMessage($response, 'lists-admin-manage', "error", ["Chyba apliakce"], ["id" => $version]);
                 
-                $books = $this->db->select("lists_books", "*", ["version" => $version]);
+                $books = $this->db->select("books", "*", ["version" => $version]);
                 $count = array_unique(array_column($books, $mode == 'reg'?'region':'genere'));
 
                 $fields = [];
@@ -67,10 +67,10 @@ final class manage extends upload {
                 }
 
                 foreach ($save as $entry)
-                    if ($this->db->has('lists_' . ($mode == 'reg'?'regions':'generes'), ['id' => $entry['id'], 'version' => $version]))
-                        $this->db->update('lists_' . ($mode == 'reg'?'regions':'generes'), $entry, ['id' => $entry['id'], 'version' => $version]);
+                    if ($this->db->has($mode == 'reg'?'regions':'generes', ['id' => $entry['id'], 'version' => $version]))
+                        $this->db->update($mode == 'reg'?'regions':'generes', $entry, ['id' => $entry['id'], 'version' => $version]);
                     else
-                        $this->db->insert('lists_' . ($mode == 'reg'?'regions':'generes'), $entry);
+                        $this->db->insert($mode == 'reg'?'regions':'generes', $entry);
 
                 return $this->redirectWithMessage($response, 'lists-admin-manage', "status", ["Nastavení uloženo"], ["id" => $version]);
             }
@@ -78,18 +78,18 @@ final class manage extends upload {
 
         $regions = [];
         $generes = [];
-        foreach ($this->db->select('lists_regions', '*', ['version' => $version]) as $reg)
+        foreach ($this->db->select('regions', '*', ['version' => $version]) as $reg)
             $regions[$reg['id']] = $reg;
-        foreach ($this->db->select('lists_generes', '*', ['version' => $version]) as $gen)
+        foreach ($this->db->select('generes', '*', ['version' => $version]) as $gen)
             $generes[$gen['id']] = $gen;
         
-        $name = $this->db->get('lists_versions', 'name', ["id" => $version]);
-        $books = $this->db->select("lists_books", "*", ["version" => $version]);
+        $name = $this->db->get('versions', 'name', ["id" => $version]);
+        $books = $this->db->select("books", "*", ["version" => $version]);
 
         $regionsCount = array_unique(array_column($books, 'region'));
         $generesCount = array_unique(array_column($books, 'genere'));
 
-        $response = $this->sendResponse($request, $response, "lists/admin/manage.phtml", [
+        $response = $this->sendResponse($request, $response, "admin/manage.phtml", [
             "books" => $books,
             "version" => $version,
             "name" => $name,

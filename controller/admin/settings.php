@@ -13,7 +13,7 @@ class settings extends \sup\controller {
         $draw = filter_var(@$data['draw'], FILTER_SANITIZE_STRING);
         $active = filter_var(@$data['active'], FILTER_SANITIZE_STRING);
 
-        if (!$this->container->db->has("lists_versions", ["id" => $active]))
+        if (!$this->container->db->has("versions", ["id" => $active]))
             return $this->redirectWithMessage($response, 'lists', "error", ["Období nenalezeno"]);
         
         $store = [
@@ -22,10 +22,10 @@ class settings extends \sup\controller {
             "open_accepting"  => $accept == "on",
             "open_drawing"   => $draw == "on",
         ];
-        if ($this->container->db->count("lists_settings"))
-            $this->container->db->update("lists_settings", $store);
+        if ($this->container->db->count("settings"))
+            $this->container->db->update("settings", $store);
         else
-            $this->container->db->insert("lists_settings", $store);
+            $this->container->db->insert("settings", $store);
 
         return $this->redirectWithMessage($response, 'lists', "status", ["Nastavení uloženo"]);
 

@@ -8,7 +8,7 @@ class accept extends \sup\controller {
 
     function __construct($container) {
         parent::__construct($container);
-        $this->settings = $this->db->get("lists_settings", "*");
+        $this->settings = $this->db->get("settings", "*");
     }
 
     function __invoke($request, $response, $args) {
@@ -37,7 +37,7 @@ class accept extends \sup\controller {
                 return $this->redirectWithMessage($response, 'lists-teacher-accept', "status", ["Kánon schválen"]);
         }
 
-        return $this->sendResponse($request, $response, "lists/teacher/accept.phtml");
+        return $this->sendResponse($request, $response, "teacher/accept.phtml");
     }
     
 
@@ -89,10 +89,10 @@ class accept extends \sup\controller {
     }
 
     private function validateList($code) {
-        if (!$this->db->has("lists_main", ['id' => $code['code'], 'version' => $this->settings['active_version']]))
+        if (!$this->db->has("main", ['id' => $code['code'], 'version' => $this->settings['active_version']]))
             return false;
         
-        $list = $this->db->get('lists_main', '*', ['id' => $code['code'], 'version' => $this->settings['active_version']]);
+        $list = $this->db->get('main', '*', ['id' => $code['code'], 'version' => $this->settings['active_version']]);
         $userID = null;
         if (array_key_exists('user', $code)) {
             if (!$this->db->has('users', ['name' => $code['user']]))
@@ -105,25 +105,25 @@ class accept extends \sup\controller {
         }
 
         if (array_key_exists('books', $code)) {
-            $books = $this->db->select('lists_lists', 'book', ['list' => $code['code']]);
+            $books = $this->db->select('lists', 'book', ['list' => $code['code']]);
             if (count(array_diff($books, $code['books'])) != 0)
                 return false;
         }
 
         if (is_null($userID))
-            $userID = $this->db->get('users', ['[>]lists_main' => ['id' => 'user']], 'users.id', ['lists_main.id' => $code['code']]);
+            $userID = $this->db->get('users', ['[>]main' => ['id' => 'user']], 'users.id', ['main.id' => $code['code']]);
 
         $this->acceptList($userID, $code['code']);
         return true;
     }
 
     private function acceptList($userID, $listID) {
-        $this->db->update('lists_main', ['state' => 1], [
+        $this->db->update('main', ['state' => 1], [
             'version' => $this->settings['active_version'],
             'state'   => 2,
             'user'    => $userID
         ]);
         
-        $this->db->update('lists_main', ['state' => 2], ['id' => $listID]);
+        $this->db->update('main', ['state' => 2], ['id' => $listID]);
     }
 }
