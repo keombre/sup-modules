@@ -53,7 +53,7 @@ class seed {
         );");
 
         $this->db->query("CREATE TABLE IF NOT EXISTS regions (
-            id INTEGER PRIMARY KEY,
+            id INTEGER,
             name TEXT,
             min INTEGER,
             max INTEGER,
@@ -61,7 +61,7 @@ class seed {
         );");
 
         $this->db->query("CREATE TABLE IF NOT EXISTS generes (
-            id INTEGER PRIMARY KEY,
+            id INTEGER,
             name TEXT,
             min INTEGER,
             max INTEGER,

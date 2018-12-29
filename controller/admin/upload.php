@@ -4,9 +4,12 @@ namespace modules\lists\controller\admin;
 
 class upload extends \sup\controller {
 
+    private $uploadDir = __DIR__ . '/../../upload';
+
     function __invoke($request, $response, $args) {
 
-        $directory = $this->container['settings']['upload_directory'];
+        $directory = $this->uploadDir;
+        $this->makeUploadDir();
         $uploadedFiles = $request->getUploadedFiles();
 
         $uploadedFile = $uploadedFiles['book'];
@@ -23,6 +26,11 @@ class upload extends \sup\controller {
             return $this->redirectWithMessage($response, 'lists', "error", ["Špatný formát", "Chyba na řádku " . $parsed]);
         
         return $parsed;
+    }
+
+    private function makeUploadDir() {
+        if (!is_dir($this->uploadDir))
+            mkdir($this->uploadDir);
     }
 
     private function validateFile($filename) {
