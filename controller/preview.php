@@ -26,19 +26,22 @@ class preview extends lists {
     public function preview($request, &$response, $args) {
         
         $versionName = $this->db->get('versions', 'name [String]', ['id' => $this->settings['active_version']]);
+        
+        $userID = $this->db->get('main', ['state', 'user'], ['id' => $this->listID]);
+        $user = $this->container->auth->createFromDB($userID['user']);
 
-        $list = $this->db->get('users', ['[>]userinfo' => 'id', '[>]main' => ['id' => 'user']], [
+        $list = [
             'user' => [
-                'users.name(code) [String]',
+                'code' => $user->getInfo('name'),
                 'name' => [
-                    'userinfo.givenname(given) [String]',
-                    'userinfo.surname(sur) [String]'
+                    'given' => $user->getAttrib('givenname'),
+                    'sur' => $user->getAttrib('surname')
                 ],
-                'userinfo.class [String]'
+                'class' => $user->getAttrib('class')
             ],
-            'main.state [Int]',
-            'main.id [Int]'
-        ], ['main.id' => $this->listID]);
+            'state' => $userID['state'],
+            'id' => $this->listID
+        ];
 
         $list['books'] = $this->db->select('lists', ['[>]books' => ['book' => 'id']], [
             'books.id [Int]',
