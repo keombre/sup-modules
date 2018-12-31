@@ -16,15 +16,17 @@ class listID extends \sup\middleware {
 
         if (!is_numeric($version))
             return $response->withRedirect($this->container->router->pathFor('lists'), 301);
+
+        $user = $this->container->auth->getUser();
         
-        if ($this->container->auth->user->level(ROLE_STUDENT)) {
-            $userID = $this->container->auth->user->getInfo('id');
+        if ($user->is(ROLE_STUDENT)) {
+            $userID = $user->getID();
 
             if ($this->container->db->has("main", ["id" => $id, "user" => $userID, "version" => $version]))
                 return $next($request, $response);
             else
                 return $this->redirectWithMessage($response, 'lists', "error", ["Kánon nenalezen"]);
-        } else if ($this->container->auth->user->level([ROLE_TEACHER, ROLE_ADMIN])) {
+        } else if ($user->is(ROLE_TEACHER) || $user->is(ROLE_ADMIN)) {
             if ($this->container->db->has("main", ["id" => $id, "version" => $version]))
                 return $next($request, $response);
             else

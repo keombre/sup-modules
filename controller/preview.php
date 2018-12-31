@@ -27,27 +27,18 @@ class preview extends lists {
         
         $versionName = $this->db->get('versions', 'name [String]', ['id' => $this->settings['active_version']]);
         
-        $userID = $this->db->get('main', ['state', 'user'], ['id' => $this->listID]);
-        $user = $this->container->auth->createFromDB($userID['user']);
+        $listInfo = $this->db->get('main', ['state', 'user'], ['id' => $this->listID]);
 
         $list = [
-            'user' => [
-                'code' => $user->getInfo('name'),
-                'name' => [
-                    'given' => $user->getAttrib('givenname'),
-                    'sur' => $user->getAttrib('surname')
-                ],
-                'class' => $user->getAttrib('class')
-            ],
-            'state' => $userID['state'],
-            'id' => $this->listID
+            'user' => (new \sup\User($this->container))->createFromDB($listInfo['user']),
+            'state' => $listInfo['state'],
+            'id' => $this->listID,
+            'books' => $this->db->select('lists', ['[>]books' => ['book' => 'id']], [
+                'books.id [Int]',
+                'books.name [String]',
+                'books.author [String]'
+            ], ['lists.list' => $this->listID, 'ORDER' => 'books.id'])
         ];
-
-        $list['books'] = $this->db->select('lists', ['[>]books' => ['book' => 'id']], [
-            'books.id [Int]',
-            'books.name [String]',
-            'books.author [String]'
-        ], ['lists.list' => $this->listID, 'ORDER' => 'books.id']);
 
         $qrURL = (string) $request
                 ->getUri()
@@ -72,6 +63,6 @@ class preview extends lists {
     }
 
     private function formatBarcode($list) {
-        return 'C' . $list['id'] . "-U" . $list['user']['code'];
+        return 'C' . $list['id'] . "-U" . $list['user']->getUname();
     }
 }

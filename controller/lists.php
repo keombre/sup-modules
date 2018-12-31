@@ -12,14 +12,14 @@ abstract class lists extends \sup\controller implements \sup\roleActions {
         parent::__construct($container);
         
         $this->settings = $this->db->get("settings", "*");
-        $this->userID = $this->container->auth->user->getInfo('id');
+        $this->userID = $this->container->auth->getUser()->getID();
     }
 
     function __invoke(\Slim\Http\Request $request, \Slim\Http\Response $response, $args) {
         if (array_key_exists('id', $args))
             $this->listID = filter_var($args['id'], FILTER_SANITIZE_STRING);
             
-        $userLevel = $this->container->auth->user->getInfo('activeRole');
+        $userLevel = $this->container->auth->getUser()->getAttribute('activeRole');
         switch ($userLevel) {
             case ROLE_STUDENT: return $this->student($request, $response, $args);
             case ROLE_TEACHER: return $this->teacher($request, $response, $args);

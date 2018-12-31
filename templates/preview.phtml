@@ -31,11 +31,11 @@
 <table>
     <tr>
         <td>Jméno:&nbsp;&nbsp;</td>
-        <td><strong><?=implode(' ', $list['user']['name'])?></strong></td>
+        <td><strong><?=$list['user']->getName()?></strong></td>
     </tr>
     <tr>
         <td>Třída: </td>
-        <td><strong><?=$list['user']['class']?></strong></td>
+        <td><strong><?=$list['user']->getAttribute('class')?></strong></td>
     </tr>
 </table>
 <br />
