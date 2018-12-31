@@ -30,7 +30,7 @@ class preview extends lists {
         $listInfo = $this->db->get('main', ['state', 'user'], ['id' => $this->listID]);
 
         $list = [
-            'user' => (new \sup\User($this->container))->createFromDB($listInfo['user']),
+            'user' => (new \sup\User($this->container->base))->createFromDB($listInfo['user']),
             'state' => $listInfo['state'],
             'id' => $this->listID,
             'books' => $this->db->select('lists', ['[>]books' => ['book' => 'id']], [

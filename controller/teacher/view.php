@@ -16,24 +16,16 @@ class view extends \sup\controller {
         if (array_key_exists('id', $args)) {
             $listID = filter_var($args['id'], FILTER_SANITIZE_STRING);
             
-            return (new \controller\lists\preview($this->container))->withListID($listID)->preview($request, $response, $args);
+            return (new \modules\lists\controller\preview($this->container))->withListID($listID)->preview($request, $response, $args);
 
         } else {
-            $students = $this->db->select('userinfo', ['[>]users' => ['id']], [
-                'userinfo.id [Int]',
-                'users.name(code) [Int]',
-                'name' => [
-                    'userinfo.givenname(given) [String]',
-                    'userinfo.surname(sur) [String]'
-                ],
-                'userinfo.class [String]'
-            ], ['users.role[~]' => ROLE_STUDENT]);
-            foreach ($students as $id => $student)
-                $students[$id]['list'] = $this->db->get('main', 'id', [
-                    'version' => $this->settings['active_version'],
-                    'user' => $student['id'],
-                    'state' => 2
-                ]);
+            
+            $students = [];
+            foreach ($this->db->select('main', ['id', 'user'], ['version' => $this->settings['active_version'], 'state' => 2]) as $entry)
+            $students[] = [
+                'user' => (new \sup\User($this->container->base))->createFromDB($entry['user']),
+                'list' => $entry['id']
+            ];
             
             $response = $this->sendResponse($request, $response, "teacher/view.phtml", ["students" => $students]);
         }

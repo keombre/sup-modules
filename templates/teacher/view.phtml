@@ -13,10 +13,8 @@
         <?php if (is_array(@$students) && count($students)):?>
             <ul class='list-group'>
             <?php foreach($students as $student):?>
-                <li class='list-group-item'><?=implode(' ', $student['name'])?> (<?=$student['code']?>) <b><?=$student['class']?></b> 
-                <?php if (is_numeric($student['list'])):?>
-                    <span class='pull-right'>Kánon: <a href="<?=$router->pathFor('lists-teacher-view', ['id' => $student['list']])?>"><?=$student['list']?></a></span>
-                <?php endif;?>
+                <li class='list-group-item'><?=$student['user']->getName()?> (<?=$student['user']->getUname()?>) <b><?=$student['user']->getAttribute('class')?></b> 
+                <span class='pull-right'>Kánon: <a href="<?=$router->pathFor('lists-teacher-view', ['id' => $student['list']])?>"><?=$student['list']?></a></span>
                 </li>
             <?php endforeach;?>
             </ul>
