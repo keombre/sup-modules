@@ -2,7 +2,7 @@
     "name": "lists",
     "description": "Allows creation, printing and managment of graduation kanons.",
     "version": "0.1.6",
-    "min_base_version": "0.2.5",
+    "min_base_version": "0.2.7",
     "locale": {
         "name": {
             "cs": "Maturitní kánon",
