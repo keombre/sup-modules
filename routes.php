@@ -49,5 +49,8 @@ class routes {
             })->add(\middleware\auth\admin::class);
             
         })->add(\middleware\layout::class);
+
+        $app->get('/draw/view', controller\draw\draw::class)
+        ->setName('draw');
     }
 }
