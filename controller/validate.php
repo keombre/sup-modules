@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace modules\lists\controller;
 
 class validate extends lists {
 
     public function student($request, &$response, $args) {
-        $state = $this->container->db->get('main', 'state', ['id' => $this->listID]);
+        $state = $this->container->db->get('main', 'state [Int]', ['id' => $this->listID]);
 
         if ($state == 0) {
             if (!$this->validate($response))
@@ -36,7 +36,13 @@ class validate extends lists {
         }
         
         $books = [];
-        foreach ($this->container->db->select("books", "*") as $book) {
+        foreach ($this->container->db->select("books", [
+            'id [Int]',
+            'name [String]',
+            'author [String]',
+            'region [Int]',
+            'genere [Int]'
+        ]) as $book) {
             $books[$book['id']] = $book;
         }
 
@@ -47,12 +53,12 @@ class validate extends lists {
         $genereInfo = [];
         $regionInfo = [];
 
-        foreach ($this->container->db->select("generes", "*") as $genere) {
+        foreach ($this->container->db->select("generes", ['id [Int]']) as $genere) {
             $genereCounter[$genere['id']] = 0;
             $genereInfo[$genere['id']] = $genere;
         }
 
-        foreach ($this->container->db->select("regions", "*") as $region) {
+        foreach ($this->container->db->select("regions", ['id [Int]']) as $region) {
             $regionCounter[$region['id']] = 0;
             $regionInfo[$region['id']] = $region;
         }
@@ -65,8 +71,14 @@ class validate extends lists {
             if (!array_key_exists($books[$book]['author'], $authorCounter))
                 $authorCounter[$books[$book]['author']] = 0;
             
-            @$genereCounter[$books[$book]['genere']]++;
-            @$regionCounter[$books[$book]['region']]++;
+            if (!array_key_exists($books[$book]['genere'], $genereCounter))
+                $genereCounter[$books[$book]['genere']] = 0;
+            
+            if (!array_key_exists($books[$book]['region'], $regionCounter))
+                $regionCounter[$books[$book]['region']] = 0;
+            
+            $genereCounter[$books[$book]['genere']]++;
+            $regionCounter[$books[$book]['region']]++;
             $authorCounter[$books[$book]['author']]++;
         }
 
@@ -123,14 +135,14 @@ class validate extends lists {
             if (!array_key_exists($id, $info))
                 continue;
             
-            if (!is_null($info[$id]['min']) && $info[$id]['min'] > $count) {
-                $message .= "<span class='text-danger'><span class='glyphicon glyphicon-remove'></span> " . $info[$id]['name'] . " (<b>" . $info[$id]['min'] . " ≤</b> " . $count . " ≤ " . (is_numeric($info[$id]['max'])?$info[$id]['max']:'∞') . ")</span><br />" . PHP_EOL;
+            if (array_key_exists('min', $info[$id]) && !is_null($info[$id]['min']) && $info[$id]['min'] > $count) {
+                $message .= "<span class='text-danger'><span class='glyphicon glyphicon-remove'></span> " . (array_key_exists('name', $info[$id]) ? $info[$id]['name'] : '') . " (<b>" . $info[$id]['min'] . " ≤</b> " . $count . " ≤ " . ((array_key_exists('max', $info[$id]) && is_numeric($info[$id]['max']))?$info[$id]['max']:'∞') . ")</span><br />" . PHP_EOL;
                 $ret = false;
-            } elseif (!is_null($info[$id]['max']) && $info[$id]['max'] < $count) {
-                $message .= "<span class='text-danger'><span class='glyphicon glyphicon-remove'></span> " . $info[$id]['name'] . " (" . (is_numeric($info[$id]['min'])?$info[$id]['min']:'0') . " ≤ " . $count . " <b>≤ " . $info[$id]['max'] . "</b>)</span><br />" . PHP_EOL;
+            } elseif (array_key_exists('max', $info[$id]) && !is_null($info[$id]['max']) && $info[$id]['max'] < $count) {
+                $message .= "<span class='text-danger'><span class='glyphicon glyphicon-remove'></span> " . (array_key_exists('name', $info[$id]) ? $info[$id]['name'] : '') . " (" . ((array_key_exists('min', $info[$id]) && is_numeric($info[$id]['min']))?$info[$id]['min']:'0') . " ≤ " . $count . " <b>≤ " . $info[$id]['max'] . "</b>)</span><br />" . PHP_EOL;
                 $ret = false;
             } else
-                $message .= "<span class='text-success'><span class='glyphicon glyphicon-ok'></span> " . $info[$id]['name'] . " (" . (is_numeric($info[$id]['min'])?$info[$id]['min']:'0') . " ≤ " . $count . " ≤ " . (is_numeric($info[$id]['max'])?$info[$id]['max']:'∞') . ")</span><br />" . PHP_EOL;
+                $message .= "<span class='text-success'><span class='glyphicon glyphicon-ok'></span> " . (array_key_exists('name', $info[$id]) ? $info[$id]['name'] : '') . " (" . ((array_key_exists('min', $info[$id]) && is_numeric($info[$id]['min']))?$info[$id]['min']:'0') . " ≤ " . $count . " ≤ " . ((array_key_exists('max', $info[$id]) && is_numeric($info[$id]['max']))?$info[$id]['max']:'∞') . ")</span><br />" . PHP_EOL;
         }
         return $ret ? "" : $message;
     }
