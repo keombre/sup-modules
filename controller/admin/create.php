@@ -27,8 +27,8 @@ final class create extends upload {
         $save = [];
         foreach ($parsed as $entry) {
             array_push($save, [
-                "name"    => $entry[2],
-                "author"  => $entry[1],
+                "name"    => trim($entry[2]),
+                "author"  => trim($entry[1]),
                 "region"  => intval($entry[0]),
                 "genere"  => intval($entry[3]),
                 "version" => $version

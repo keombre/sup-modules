@@ -8,7 +8,7 @@ class open_accepting extends \sup\middleware {
 
         if ($this->container->auth->getUser()->is(ROLE_ADMIN)) {
             return $next($request, $response);
-        } else if ($this->container->db->get("settings", "open_accepting") != 1) {
+        } else if ($this->container->db->get("settings", "open_accepting [Int]") != 1) {
             $response->getBody()->write("Nemáte přístup ke schvalování kánonů");
             return $response;
         } else {

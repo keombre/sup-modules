@@ -50,7 +50,19 @@ class routes {
             
         })->add(\middleware\layout::class);
 
-        $app->get('/draw/view', controller\draw\draw::class)
-        ->setName('draw');
+        $app->group('/draw', function () {
+            $this->get('', controller\draw\select::class)
+            ->setName('draw');
+
+            $this->get('/run', controller\draw\run::class)
+            ->setName('draw-run');
+
+            $this->group('/api/v1', function () {
+                $this->get('/lists', controller\draw\api::class . ':lists');
+                $this->get('/{list}', controller\draw\api::class . ':books');
+            });
+        })
+        ->add(middleware\open_drawing::class);
+
     }
 }

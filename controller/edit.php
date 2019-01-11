@@ -70,10 +70,21 @@ class edit extends lists {
         $listbooks = [];
         if (!is_null($this->listID))
             $listbooks = $this->container->db->select("lists", "book", ["list" => $this->listID, "ORDER" => "book"]);
-
+        
+        /*
         $allbooks = [];
         foreach ($this->container->db->select("books", "*", ["version" => $this->settings['active_version']]) as $book)
             $allbooks[$book['id']] = $book;
+        */
+
+        $allbooks = $this->db->select('books', [
+            'id [Index]',
+            'name [String]',
+            'author [String]',
+            'region [Int]',
+            'genere [Int]',
+            'version [Int]'
+        ], ['version' => $this->settings['active_version']]);
         
         $books = [];
         $list = [];

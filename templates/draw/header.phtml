@@ -8,18 +8,21 @@
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('<?=$ASSET_PATH?>/sw.js', {scope: './'}).then(function(registration) {
-      // Registration was successful
+    /*navigator.serviceWorker.register('<?=$ASSET_PATH?>/sw.js', {scope: './'}).then(function(registration) {
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
     }, function(err) {
-      // registration failed :(
       console.log('ServiceWorker registration failed: ', err);
-    });
+      offlineFail();
+    });*/
+    null;
   });
+} else {
+  offlineFail();
+}
+
+function offlineFail() {
+  null;
 }
 </script>
 </head>
 <body>
-    
-</body>
-</html>
