@@ -35,33 +35,26 @@ class validate extends lists {
             return false;
         }
         
-        $books = [];
-        foreach ($this->container->db->select("books", [
-            'id [Int]',
+        $books = $this->container->db->select("books", [
+            'id [Index]',
             'name [String]',
             'author [String]',
             'region [Int]',
             'genere [Int]'
-        ]) as $book) {
-            $books[$book['id']] = $book;
-        }
+        ]);
 
         $genereCounter = [];
         $regionCounter = [];
         $authorCounter = [];
 
-        $genereInfo = [];
-        $regionInfo = [];
+        $genereInfo = $this->container->db->select("generes", ['id [Index]']);
+        $regionInfo = $this->container->db->select("regions", ['id [Index]']);
 
-        foreach ($this->container->db->select("generes", ['id [Int]']) as $genere) {
+        foreach ($genereInfo as $genere)
             $genereCounter[$genere['id']] = 0;
-            $genereInfo[$genere['id']] = $genere;
-        }
 
-        foreach ($this->container->db->select("regions", ['id [Int]']) as $region) {
+        foreach ($regionInfo as $region)
             $regionCounter[$region['id']] = 0;
-            $regionInfo[$region['id']] = $region;
-        }
 
         foreach ($list as $book) {
             if (!array_key_exists($book, $books)) {

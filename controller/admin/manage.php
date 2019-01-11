@@ -76,12 +76,19 @@ final class manage extends upload {
             }
         }
 
-        $regions = [];
-        $generes = [];
-        foreach ($this->db->select('regions', '*', ['version' => $version]) as $reg)
-            $regions[$reg['id']] = $reg;
-        foreach ($this->db->select('generes', '*', ['version' => $version]) as $gen)
-            $generes[$gen['id']] = $gen;
+        $regions = $this->db->select('regions', [
+            'id [Index]',
+            'name [String]',
+            'min [Int]',
+            'max [Int]'
+        ], ['version' => $version]);
+
+        $generes = $this->db->select('generes', [
+            'id [Index]',
+            'name [String]',
+            'min [Int]',
+            'max [Int]'
+        ], ['version' => $version]);
         
         $name = $this->db->get('versions', 'name', ["id" => $version]);
         $books = $this->db->select("books", "*", ["version" => $version]);

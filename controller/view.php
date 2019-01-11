@@ -18,9 +18,13 @@ class view extends lists {
     }
 
     public function teacher($request, &$response, $args) {
-        $books = [];
-        foreach ($this->db->select('books', '*', ['version' => $this->settings['active_version']]) as $book)
-            $books[$book['id']] = $book;
+        $books = $this->db->select('books', [
+            'id [Index]',
+            'name [String]',
+            'author [String]',
+            'region [Int]',
+            'genere [Int]'
+        ], ['version' => $this->settings['active_version']]);
         
         $count = array_count_values($this->db->select('lists', ['[>]main' => ['list' => 'id']], 'book', ['main.version' => $this->settings['active_version'], 'main.state' => 2]));
         arsort($count);
