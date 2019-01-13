@@ -55,10 +55,9 @@
         },
         "draws": {
             "id": "INTEGER PRIMARY KEY",
-            "user": "INTEGER",
             "list": "INTEGER",
-            "time": "INTEGER",
             "book": "INTEGER",
+            "time": "INTEGER",
             "version": "INTEGER"
         }
     }

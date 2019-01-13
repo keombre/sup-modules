@@ -59,7 +59,10 @@ class routes {
 
             $this->group('/api/v1', function () {
                 $this->get('/lists', controller\draw\api::class . ':lists');
+                $this->get('/draws', controller\draw\api::class . ':draws');
                 $this->get('/{list}', controller\draw\api::class . ':books');
+                $this->get('/{list}/draw/{book}', controller\draw\api::class . ':draw');
+                $this->get('/{list}/revoke/{book}', controller\draw\api::class . ':revoke');
             });
         })
         ->add(middleware\open_drawing::class);
