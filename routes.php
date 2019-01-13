@@ -54,9 +54,6 @@ class routes {
             $this->get('', controller\draw\select::class)
             ->setName('draw');
 
-            $this->get('/run', controller\draw\run::class)
-            ->setName('draw-run');
-
             $this->group('/api/v1', function () {
                 $this->get('/lists', controller\draw\api::class . ':lists');
                 $this->get('/draws', controller\draw\api::class . ':draws');

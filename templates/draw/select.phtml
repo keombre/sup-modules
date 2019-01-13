@@ -1,4 +1,32 @@
-<?php include 'header.phtml'?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Losování</title>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    /*navigator.serviceWorker.register('<?=$ASSET_PATH?>/sw.js', {scope: './'}).then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+      offlineFail();
+    });*/
+    null;
+  });
+} else {
+  offlineFail();
+}
+
+function offlineFail() {
+  null;
+}
+</script>
+</head>
+<body>
+
 
 </body>
 </html>
