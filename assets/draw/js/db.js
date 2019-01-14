@@ -11,7 +11,7 @@ function json(response) {
 }
 
 function apiState(json) {
-    if (json.status == 'success') {
+    if (json.code == 0) {
         return Promise.resolve(json);
     } else {
         return Promise.reject(json);
@@ -32,51 +32,63 @@ function fetchApi(site) {
     });
 }
 
-function draw(entry) {
-    return new Promise((resolve, reject) => {
-        console.log('draw: uploading');
-        fetchApi(entry.list + '/draw/' + entry.book).then(resolve).catch(e => {
-            if (e.code != 3) {
-                reject(new Error(e.message));
-            } else {
-                console.log('draw: forcing draw')
-                fetchApi(entry.list + '/revoke/' + e.book).then(() => {
-                    fetchApi(entry.list + '/draw/' + entry.book)
-                        .then(resolve, reject);
-                }, reject);
-            }
-        })
-    });
+export function draw(entry) {
+    return fetchApi(entry.list + '/draw/' + entry.book);
+}
+
+export function revoke(entry) {
+    return fetchApi(entry.list + '/revoke/' + entry.book);
 }
 
 function seed(e) {
-    if (typeof e == 'undefined') {
-        e = []
-        idbKeyval.set('draws', e).then(() => {
-            return Promise.resolve(e);
-        })
-    } else {
-        return Promise.resolve(e);
-    }
+    return new Promise((resolve, reject) => {
+        if (typeof e == 'undefined') {
+            console.log('sync: seeding local DB')
+            e = []
+            idbKeyval.set('draws', e).then(() => resolve(e), b => reject(b));
+        } else {
+            resolve(e);
+        }
+    });
 }
 
-function sync() {
+export function sync() {
     console.log('sync: syncing..');
-    Promise.all([idbKeyval.get('draws').then(seed), fetchApi('draws?all').then(e => e.draws)])
+    Promise.all([idbKeyval.get('draws').then(seed), fetchApi('draws?all').then(e => Object.values(e.draws))])
         .then(data => {
-            let local = data[0].filter(x => !data[1].includes(x));
+            let local = data[0].filter(x => !data[1].find(e => {
+                return e.id == x.id
+            }));
             
             console.log('sync: uploading ' + local.length + ' entries');
-            local.forEach(draw);
+            local.forEach(entry => draw(entry).catch(e => {
+                if (e.code != 3) {
+                    new Error(e.message)
+                } else {
+                    console.log('sync: forcing draw')
+                    revoke(e)
+                        .then(() => draw(entry)
+                            .catch(e => new Error(e.message))
+                        ).catch(e => new Error(e.message));
+                }
+            }));
 
-            let concat = data[1].concat(local);
-            console.log('sync: saving ' + concat.length + ' entries')
-            idbKeyval.set('draws', concat);
+            if (local.length) {
+                fetchApi('draws?all').then(e => {
+                    let save = Object.values(e.draws);
+                    console.log('sync: saving ' + save.length + ' entries')
+                    idbKeyval.set('draws', save);
+                });
+            } else {
+                console.log('sync: saving ' + data[1].length + ' entries')
+                idbKeyval.set('draws', data[1]);
+            }
         });
 }
 
 export function init() {
-    draw({'time': 0, 'list': 293638, 'book': 1})
+    //draw({'time': 0, 'list': 293638, 'book': 1})
+    sync();
     /*Promise.all([sync(), fetchApi('lists')]).then(vals => {
         console.log(vals);
     });*/

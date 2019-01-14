@@ -89,6 +89,7 @@ class api extends \sup\controller
                 'status' => 'error',
                 'code' => 3,
                 'message' => 'already drawn',
+                'list' => $list,
                 'book' => $saved
             ]);
         }
