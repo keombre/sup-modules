@@ -83,9 +83,14 @@ class api extends \sup\controller
         ) {
             return $response->withJson(['status' => 'error', 'code' => 2, 'message' => 'not found'], 404);
         }
-        
-        if ($this->db->has('draws', ['list' => $list, 'version' => $this->settings['active_version']])) {
-            return $response->withJson(['status' => 'error', 'code' => 3, 'message' => 'already drawn']);
+        $saved = $this->db->get('draws', 'book', ['list' => $list, 'version' => $this->settings['active_version']]);
+        if (!is_null($saved)) {
+            return $response->withJson([
+                'status' => 'error',
+                'code' => 3,
+                'message' => 'already drawn',
+                'book' => $saved
+            ]);
         }
 
         if (!is_null($request->getQueryParam('time'))) {
@@ -98,7 +103,7 @@ class api extends \sup\controller
         }
 
         if ($this->db->insert('draws', ['list' => $list, 'time' => $time, 'book' => $book, 'version' => $this->settings['active_version']])) {
-            return $response->withJson(['status' => 'successs', 'code' => 0, 'message' => 'OK']);
+            return $response->withJson(['status' => 'success', 'code' => 0, 'message' => 'OK']);
         } else {
             return $response->withJson(['status' => 'error', 'code' => 4, 'message' => 'database error']);
         }
@@ -121,7 +126,7 @@ class api extends \sup\controller
         }
         
         if ($this->db->delete('draws', ['list' => $list, 'book' => $book, 'version' => $this->settings['active_version']])) {
-            return $response->withJson(['status' => 'successs', 'code' => 0, 'message' => 'OK']);
+            return $response->withJson(['status' => 'success', 'code' => 0, 'message' => 'OK']);
         } else {
             return $response->withJson(['status' => 'error', 'code' => 4, 'message' => 'database error']);
         }

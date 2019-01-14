@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Losování</title>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    /*navigator.serviceWorker.register('<?=$ASSET_PATH?>/sw.js', {scope: './'}).then(function(registration) {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-      offlineFail();
-    });*/
-    null;
-  });
-} else {
-  offlineFail();
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Losování</title>
+  <script>
 
-function offlineFail() {
-  null;
-}
-</script>
+    // check browser support
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.app);
+    
+    if (!isFirefox && !isChrome) {
+      document.write("<h1>You are using unsupported browser.</h1><h2>Please switch to the latest version of Chrome or Firefox</h2>");
+      throw new Error("Unsupported borwser");
+    };
+
+    /*if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('<?=$ASSET_PATH?>/draw/sw.js', {scope: './'}).then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+          offlineFail();
+        });
+      });
+    } else {
+      offlineFail();
+    }*/
+    function offlineFail() {
+      null;
+    }
+  </script>
+  <script src="<?=$ASSET_PATH?>/draw/js/idb-keyval-iife.min.js"></script>
+  <script src="<?=$ASSET_PATH?>/draw/js/mousetrap.min.js"></script>
+  <script src="<?=$ASSET_PATH?>/draw/js/main.js" crossorigin></script>
 </head>
 <body>
-
-
 </body>
 </html>
