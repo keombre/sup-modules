@@ -1,1 +1,3 @@
-import('./db.js').then(module => {module.init()})
+// functions:
+// draw, then sync
+// revoke then sync
