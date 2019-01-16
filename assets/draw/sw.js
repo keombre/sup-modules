@@ -4,7 +4,6 @@ _withIDBStore(e,t){return this._dbp.then(r=>new Promise((n,o)=>{const s=r.transa
 
 var CACHE_NAME = 'draw-cache-v1';
 var urlsToCache = [
-  '/favicon.ico',
   '../../draw',
   'css/main.css',
   'js/mousetrap.min.js',
@@ -17,13 +16,15 @@ self.addEventListener('install', function (event) {
     caches.open(CACHE_NAME)
       .then(function (cache) {
         console.log('Opened cache');
+        fetchApi('lists').then(lists => {
+          lists.lists.forEach(entry => cache.add('../../draw/api/v1/' + entry.list));
+        });
         return cache.addAll(urlsToCache);
       })
   );
 });
 
 self.addEventListener('fetch', function (event) {
-  console.log(event);
   event.respondWith(
     caches.match(event.request)
       .then(function (response) {
@@ -95,27 +96,43 @@ function seed(e) {
   });
 }
 
+function draw(entry) {
+  return fetchApi(entry.list + '/draw/' + entry.book);
+}
+
+function revoke(entry) {
+  return fetchApi(entry.list + '/revoke/' + entry.book);
+}
+
 function sync() {
   return new Promise((resolve, reject) => {
     console.log('sync: syncing..');
-    Promise.all([idbKeyval.get('draws').then(seed), fetchApi('draws?all').then(e => Object.values(e.draws))])
-      .then(data => {
-        let local = data[0].filter(x => !data[1].find(e => {
-          return e.id == x.id
-        }));
+    Promise.all([
+      idbKeyval.get('draws').then(seed),
+      fetchApi('draws?all').then(e => Object.values(e.draws))
+    ]).then(data => {
+        let local = data[0].filter(x => (!data[1].find(e => {
+          return e.list == x.list
+        }) || x.revoke == 1));
         
         console.log('sync: uploading ' + local.length + ' entries');
-        local.forEach(entry => draw(entry).catch(e => {
-          if (e.code != 3) {
-            reject(e.message)
+        local.forEach(entry => {
+          if (entry.revoke == 1) {
+            revoke(entry);
           } else {
-            console.log('sync: forcing draw')
-            revoke(e)
-              .then(() => draw(entry)
-                .catch(e2 => reject(e2.message))
-              , e2 => reject(e2.message));
+            draw(entry).catch(e => {
+              if (e.code != 3) {
+                reject(e.message)
+              } else {
+                console.log('sync: forcing draw')
+                revoke(e)
+                  .then(() => draw(entry)
+                    .catch(e2 => reject(e2.message))
+                  , e2 => reject(e2.message));
+              }
+            })
           }
-        }));
+        });
 
         if (local.length) {
           fetchApi('draws?all').then(e => {
