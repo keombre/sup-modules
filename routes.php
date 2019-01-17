@@ -38,7 +38,8 @@ class routes {
             ->add(\middleware\auth\teacher::class);
 
             $this->group('/admin', function () {
-                $this->get('/download', controller\download\generate::class);
+                $this->get('/download', controller\download\generate::class)
+                ->setName('lists-admin-download');
 
                 $this->put('/create', controller\admin\create::class)
                 ->setName('lists-admin-create');

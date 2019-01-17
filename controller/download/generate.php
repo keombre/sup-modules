@@ -15,17 +15,19 @@ class generate extends \sup\controller
     {
         $books = $this->getBooks();
         $lists = $this->getLists();
-
-        if (is_file(__DIR__ . '/archive.zip'))
-            unlink(__DIR__ . '/archive.zip');
         
-        $this->createZip($books, $lists);
-        return $this->sendFile($response, __DIR__ . '/archive.zip');
+        $fname = sys_get_temp_dir() .  '/sup-archive.zip';
+        
+        if (is_file($fname))
+            unlink($fname);
+        
+        $this->createZip($books, $lists, $fname);
+        return $this->sendFile($response, $fname, 'archive.zip');
     }
 
-    private function createZip($books, $lists) {
+    private function createZip($books, $lists, $fname) {
         $zip = new \ZipArchive();
-        $filename = __DIR__ . "/archive.zip";
+        $filename = $fname;
 
         if ($zip->open($filename, \ZipArchive::CREATE)!==TRUE) {
             exit("cannot open <$filename>\n");
