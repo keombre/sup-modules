@@ -13,6 +13,9 @@ class generate extends \sup\controller
 
     public function __invoke($request, $response, $args)
     {
+        if (!is_string($this->settings['active_version']))
+            return $this->redirectWithMessage($response, 'lists', "error", ["Nejdřív zvolte verzi"]);
+        
         $books = $this->getBooks();
         $lists = $this->getLists();
         

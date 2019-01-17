@@ -38,10 +38,11 @@ class view extends lists {
 
     public function admin($request, &$response, $args) {
         $versions = $this->container->db->select("versions", "*");
-
+        $allowDownload = is_string($this->settings['active_version']);
         $response = $this->sendResponse($request, $response, "admin/dash.phtml", [
             "versions" => $versions,
-            "settings" => $this->settings
+            "settings" => $this->settings,
+            "allowDownload" => $allowDownload
         ]);
     }
 }

@@ -2,7 +2,7 @@
 <h3>Maturitní kánon <small>admin</small></h3>
 <hr />
 </div>
-<div class="col-md-5">
+<div class="col-md-6">
 <div class="panel panel-default">
     <div class="panel-heading">
         <strong>Založit novou verzi kánonu</strong>
@@ -68,11 +68,18 @@ $('#toggle-list').click(function(){
 });
 </script><?=$lang->g('', 'dash-admin')?>
 
-<div class="col-md-5 col-md-offset-2">
+<div class="col-md-6">
     <div class="panel panel-default">
-    <div class="panel-body">
-        <a href="https://github.com/gpjp-hades/kanon-app/releases" target="_blank">Losovací aplikace</a>
-        <a href="<?=$router->pathFor('lists-admin-download')?>" target="_blank">Stáhnout kánony</a>
+    <div class="panel-heading">
+        <strong>Tenhle dashboard je šílený maglajs</strong>
+    </div>
+    <div class="panel-body text-center">
+        <?php if ($allowDownload):?>
+        <a class="btn btn-lg btn-success" href="<?=$router->pathFor('lists-admin-download')?>" target="_blank">Stáhnout kánony (.zip)</a><br /><br />
+        <?php else:?>
+        <button class="btn btn-lg btn-success disabled">Stáhnout kánony (.zip)</button><br /><br />
+        <?php endif;?>
+        <a class="btn btn-default" href="https://github.com/gpjp-hades/kanon-app/releases" target="_blank">Losovací aplikace</a>
     </div>
     </div>
 
