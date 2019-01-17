@@ -10,7 +10,6 @@ class settings extends \SUP\controller {
         
         $edit = $this->sanitizePost($request, 'edit', FILTER_SANITIZE_STRING);
         $accept = $this->sanitizePost($request, 'accept', FILTER_SANITIZE_STRING);
-        $draw = $this->sanitizePost($request, 'draw', FILTER_SANITIZE_STRING);
         $active = $this->sanitizePost($request, 'active', FILTER_SANITIZE_STRING);
 
         if (!$this->container->db->has("versions", ["id" => $active]))
@@ -19,8 +18,7 @@ class settings extends \SUP\controller {
         $store = [
             "active_version" => $active,
             "open_editing"   => $edit == "on",
-            "open_accepting"  => $accept == "on",
-            "open_drawing"   => $draw == "on",
+            "open_accepting"  => $accept == "on"
         ];
         if ($this->container->db->count("settings"))
             $this->container->db->update("settings", $store);

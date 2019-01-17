@@ -38,6 +38,8 @@ class routes {
             ->add(\middleware\auth\teacher::class);
 
             $this->group('/admin', function () {
+                $this->get('/download', controller\download\generate::class);
+
                 $this->put('/create', controller\admin\create::class)
                 ->setName('lists-admin-create');
 
@@ -49,20 +51,6 @@ class routes {
             })->add(\middleware\auth\admin::class);
             
         })->add(\middleware\layout::class);
-
-        $app->group('/draw', function () {
-            $this->get('', controller\draw\select::class)
-            ->setName('draw');
-
-            $this->group('/api/v1', function () {
-                $this->get('/lists', controller\draw\api::class . ':lists');
-                $this->get('/draws', controller\draw\api::class . ':draws');
-                $this->get('/{list}', controller\draw\api::class . ':books');
-                $this->get('/{list}/draw/{book}', controller\draw\api::class . ':draw');
-                $this->get('/{list}/revoke/{book}', controller\draw\api::class . ':revoke');
-            });
-        })
-        ->add(middleware\open_drawing::class);
 
     }
 }

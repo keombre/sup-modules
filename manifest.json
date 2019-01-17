@@ -14,7 +14,6 @@
             "active_version": "INTEGER NULL",
             "open_editing": "INTEGER",
             "open_accepting": "INTEGER",
-            "open_drawing": "INTEGER"
         },
         "versions": {
             "id": "INTEGER PRIMARY KEY",
@@ -52,13 +51,6 @@
         "lists": {
             "list": "INTEGER",
             "book": "INTEGER"
-        },
-        "draws": {
-            "id": "INTEGER PRIMARY KEY",
-            "list": "INTEGER",
-            "book": "INTEGER",
-            "time": "INTEGER",
-            "version": "INTEGER"
         }
     }
 }

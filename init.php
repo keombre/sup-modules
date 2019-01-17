@@ -12,8 +12,7 @@ final class init {
         if (!$this->container->db->count("settings")) {
             $this->container->db->insert("settings", [
                 "open_editing"  => 0,
-                "open_accepting" => 0,
-                "open_drawing"  => 0
+                "open_accepting" => 0
             ]);
         }
     }
