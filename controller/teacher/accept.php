@@ -93,15 +93,13 @@ class accept extends \sup\controller {
             return false;
         
         $list = $this->db->get('main', '*', ['id' => $code['code'], 'version' => $this->settings['active_version']]);
-        $userID = null;
+        
         if (array_key_exists('user', $code)) {
-            if (!$this->container->base->db->has('users', ['uname' => $code['user']]))
-                return false;
+            $user = $this->container->factory->userFromID($list['user']);
             
-            $userID = $this->container->base->db->get('users', 'id', ['uname' => $code['user']]);
-
-            if ($list['user'] !== $userID)
+            if (!$user || $user->getUname() != $code['user']) {
                 return false;
+            }
         }
 
         if (array_key_exists('books', $code)) {
@@ -110,14 +108,12 @@ class accept extends \sup\controller {
                 return false;
         }
 
-        if (is_null($userID))
-            $userID = $this->db->get('main', 'user', ['id' => $code['code']]);
-
-        $this->acceptList($userID, $code['code']);
+        $this->acceptList($code['code']);
         return true;
     }
 
-    private function acceptList($userID, $listID) {
+    private function acceptList($listID) {
+        $userID = $this->db->get('main', 'user', ['id' => $listID]);
         $this->db->update('main', ['state' => 1], [
             'version' => $this->settings['active_version'],
             'state'   => 2,
