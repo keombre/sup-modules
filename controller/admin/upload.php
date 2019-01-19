@@ -14,16 +14,23 @@ class upload extends \sup\controller {
 
         $uploadedFile = $uploadedFiles['book'];
         if (!$uploadedFile)
-            return $this->redirectWithMessage($response, 'lists', "error", ["Soubor neodeslán"]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('error-notsent', 'admin-upload')    
+            ]);
 
         if ($uploadedFile->getError() !== UPLOAD_ERR_OK)
-            return $this->redirectWithMessage($response, 'lists', "error", ["Chyba nahrávání"]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('error-failed', 'admin-upload')
+            ]);
         
         $filename = $this->moveUploadedFile($directory, $uploadedFile);
         $parsed = $this->validateFile($directory . "/" . $filename);
         unlink($directory . "/" . $filename);
         if (!is_array($parsed))
-            return $this->redirectWithMessage($response, 'lists', "error", ["Špatný formát", "Chyba na řádku " . $parsed]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('error-syntax-title', 'admin-upload'),
+                $this->container->lang->g('error-syntax-message', 'admin-upload', ['line' => $parsed])
+            ]);
         
         return $parsed;
     }

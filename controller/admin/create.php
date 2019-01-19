@@ -10,11 +10,17 @@ final class create extends upload {
         $name = substr(filter_var(@$data['name'], FILTER_SANITIZE_STRING), 0, 30);
         
         if (!is_string($name) || strlen($name) == 0)
-            return $this->redirectWithMessage($response, 'lists', "error", ["Zadejte název verze"]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('error-version-missing', 'admin-upload')
+            ]);
         if ($name !== $data['name'])
-            return $this->redirectWithMessage($response, 'lists', "error", ["Nepoužívejte speciální znaky"]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('error-version-charset', 'admin-upload')
+            ]);
         else if ($this->db->has("versions", ["name" => $name]))
-            return $this->redirectWithMessage($response, 'lists', "error", ["Verze " . $name . " již existuje"]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('error-version-exists', 'admin-upload', ['version' => $name])
+            ]);
         
         $parsed = parent::__invoke($request, $response, $args);
         
@@ -35,7 +41,9 @@ final class create extends upload {
             ]);
         }
         $this->db->insert("books", $save);
-        $this->redirectWithMessage($response, 'lists-admin-manage', "status", [count($save) . " knih nahráno"], ['id' => $version]);
+        $this->redirectWithMessage($response, 'lists-admin-manage', "status", [
+            $this->container->lang->g('success', 'admin-upload', ['count' => count($save)])
+        ], ['id' => $version]);
         return $response;
     }
 

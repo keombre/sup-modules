@@ -13,7 +13,9 @@ class settings extends \SUP\controller {
         $active = $this->sanitizePost($request, 'active', FILTER_SANITIZE_STRING);
 
         if (!$this->container->db->has("versions", ["id" => $active]))
-            return $this->redirectWithMessage($response, 'lists', "error", ["Období nenalezeno"]);
+            return $this->redirectWithMessage($response, 'lists', "error", [
+                $this->container->lang->g('settings-version-notfound', 'dash-admin')
+            ]);
         
         $store = [
             "active_version" => $active,
@@ -25,7 +27,9 @@ class settings extends \SUP\controller {
         else
             $this->container->db->insert("settings", $store);
 
-        return $this->redirectWithMessage($response, 'lists', "status", ["Nastavení uloženo"]);
+        return $this->redirectWithMessage($response, 'lists', "status", [
+            $this->container->lang->g('settings-saved', 'dash-admin')
+        ]);
 
     }
 }
