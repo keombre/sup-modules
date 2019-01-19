@@ -52,7 +52,8 @@ class generate extends \sup\controller
             'id [Index]',
             'user [Int]'
         ], ['state' => 2, 'version' => $this->settings['active_version']]) as $list) {
-            $user = (new \sup\User($this->container->base))->createFromDB($list['user']);
+            $user = $this->container->factory->userFromID($list['user']);
+            //$user = (new \sup\User($this->container->base))->createFromDB($list['user']);
             
             $name = $user->getName();
             if ($name == ' ')

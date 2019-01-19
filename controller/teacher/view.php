@@ -23,7 +23,8 @@ class view extends \sup\controller {
             $students = [];
             foreach ($this->db->select('main', ['id', 'user'], ['version' => $this->settings['active_version'], 'state' => 2]) as $entry)
             $students[] = [
-                'user' => (new \sup\User($this->container->base))->createFromDB($entry['user']),
+                //'user' => (new \sup\User($this->container->base))->createFromDB($entry['user']),
+                'user' => $this->container->factory->userFromID($entry['user']),
                 'list' => $entry['id']
             ];
             
