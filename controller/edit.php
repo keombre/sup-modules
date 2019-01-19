@@ -104,8 +104,8 @@ class edit extends lists {
             $books[$book['region']][$book['id']] = $book;
         }
 
-        $regions = array_column($this->container->db->select("regions", "*"), 'name', 'id');
-        $generes = array_column($this->container->db->select("generes", "*"), 'name', 'id');
+        $regions = array_column($this->container->db->select("regions", "*", ['version' => $this->settings['active_version']]), 'name', 'id');
+        $generes = array_column($this->container->db->select("generes", "*", ['version' => $this->settings['active_version']]), 'name', 'id');
         $listLength = count($listbooks);
         
         $this->sendResponse($request, $response, "edit.phtml", [

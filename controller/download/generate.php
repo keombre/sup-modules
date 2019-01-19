@@ -18,6 +18,12 @@ class generate extends \sup\controller
         
         $books = $this->getBooks();
         $lists = $this->getLists();
+
+        $this->normalizeID($books, $lists);
+
+        $books = $this->formatBooks($books);
+        foreach ($lists as $listID => $list)
+            $lists[$listID]['books'] = $this->formatLists($list);
         
         $fname = sys_get_temp_dir() .  '/sup-archive.zip';
         
@@ -26,6 +32,19 @@ class generate extends \sup\controller
         
         $this->createZip($books, $lists, $fname);
         return $this->sendFile($response, $fname, 'archive.zip');
+    }
+
+    private function normalizeID(array &$books, array &$lists) {
+        $i = 1;
+
+        foreach ($books as $bookID => $book)
+            $books[$bookID]['id'] = $i++;
+        
+        foreach ($lists as $listID => $list) {
+            foreach ($list['books'] as $userBookID => $userBook) {
+                $lists[$listID]['books'][$userBookID]['id'] = $books[$userBook['id']]['id'];
+            }
+        }
     }
 
     private function createZip($books, $lists, $fname) {
@@ -46,6 +65,15 @@ class generate extends \sup\controller
         $zip->close();
     }
 
+    private function getBooks():array {
+        return $this->db->select('books', [
+            'id [Index]',
+            'region [Int]',
+            'author [String]',
+            'name [String]'
+        ], ['version' => $this->settings['active_version']]);
+    }
+
     private function getLists():array {
         $ret = [];
         foreach ($this->db->select('main', [
@@ -53,48 +81,48 @@ class generate extends \sup\controller
             'user [Int]'
         ], ['state' => 2, 'version' => $this->settings['active_version']]) as $list) {
             $user = $this->container->factory->userFromID($list['user']);
-            //$user = (new \sup\User($this->container->base))->createFromDB($list['user']);
             
             $name = $user->getName();
             if ($name == ' ')
                 $name = $user->getUName();
 
-            $file = \fopen('php://temp', 'rw');
-            \fwrite($file, $name . PHP_EOL);
-            
-            $this->fwriteList($file, $list['id']);
-            \rewind($file);
+            $books = $this->db->select('lists', ['[>]books' => ['book' => 'id']], [
+                'books.id [Index]',
+                'books.region [Int]',
+                'books.author [String]',
+                'books.name [String]'
+            ], [
+                'version' => $this->settings['active_version'],
+                'lists.list' => $list['id']
+            ]);
 
             $ret[] = [
+                'id' => $list['id'],
                 'user' => $name,
                 'class' => $user->getAttribute('class'),
-                'books' => \stream_get_contents($file)
+                'books' => $books
             ];
         }
         return $ret;
     }
 
-    private function fwriteList(&$handle, int $list):void {
-        foreach ($this->db->select('lists', ['[>]books' => ['book' => 'id']], [
-            'books.id [Index]',
-            'books.region [Int]',
-            'books.author [String]',
-            'books.name [String]'
-        ], ['version' => $this->settings['active_version'], 'lists.list' => $list]) as $book) {
-            \fwrite($handle, 'A');
-            \fputcsv($handle, $book, ';');
-        }
-    }
+    private function formatLists(array $list):string {
+        $file = \fopen('php://temp', 'rw');
+        \fwrite($file, $list['user'] . PHP_EOL);
 
-    private function getBooks():string {
+        foreach ($list['books'] as $book) {
+            \fwrite($file, 'A');
+            \fputcsv($file, $book, ';');
+        }
+
+        \rewind($file);
+        return \stream_get_contents($file);
+    }
+    
+    private function formatBooks(array $books):string {
         $csv = \fopen('php://temp', 'rw');
 
-        foreach ($this->db->select('books', [
-            'id [Index]',
-            'region [Int]',
-            'author [String]',
-            'name [String]'
-        ], ['version' => $this->settings['active_version']]) as $book) {
+        foreach ($books as $book) {
             \fputcsv($csv, $book, ';');
         }
 
