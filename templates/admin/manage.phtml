@@ -1,0 +1,84 @@
+<div class="col-md-5">
+    <h3><?=$lang->g('title', 'admin-manage', ['version' => $name])?></h3>
+    <hr />
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('new-title', 'admin-manage')?></strong>
+    </div>
+    <div class="panel-body">
+    <p><?=$lang->g('new-format', 'admin-manage')?>
+    <br />
+    <pre><?=$lang->g('csv-format', 'admin')?></pre>
+    </p>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$router->pathFor('subjects-admin-manage', ["id" => $version], ['mode' => 'upload'])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <div class="col-md-12 form-group">
+        <input type="file" name="subjects" />
+        </div>
+        <div class="col-md-6 form-group">
+            <input type="submit" class="btn btn-default form-control" value="<?=$lang->g('new-submit', 'admin-manage')?>" />
+        </div>
+    </form>
+    </div>
+    </div>
+    
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('subjects-title', 'admin-manage', ['count' => count($subjects)])?></strong>
+        <div class="pull-right">
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('subjects-expand', 'admin-manage')?></a>
+        </div>
+    </div>
+    <div class="panel-body collapse" id="collapse-list">
+    <?php if (is_array($subjects) && count($subjects)):?>
+        <ul class='list-group'>
+        <?php foreach($subjects as $subject):?>
+        <li class='list-group-item'>
+            <span style="width: 75%;display: inline-block;"><b><?=$subject['name']?></b></span>
+        </li>
+        <?php endforeach;?>
+        </ul>
+    <?php else:?>
+        <span class='text-muted'><?=$lang->g('subjects-empty', 'admin-manage')?></span>
+    <?php endif?>
+    </div>
+    </div>
+</div>
+
+<div class="col-md-5 col-md-offset-2">
+    <h3><?=$lang->g('settings-title', 'admin-manage')?>
+    <a href="<?=$router->pathFor('subjects')?>" class="btn btn-default pull-right"><?=$lang->g('back', 'admin-manage')?></a>
+    </h3>
+    <hr />
+
+    <div class="panel panel-default">
+    <div class="panel-heading"><strong><?=$lang->g('settings-limit-title', 'admin-manage')?></strong></div>
+    <div class="panel-body">
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$router->pathFor('subjects-admin-manage', ["id" => $version], ['mode' => 'limit'])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <input type="hidden" name="_METHOD" value="PUT" />
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="limit"><?=$lang->g('settings-limit', 'admin-manage')?></label>
+            <div class="col-md-5" style="padding: 0 5px">
+                <input class="form-control" type="text" name="limit" placeholder="<?=$lang->g('settings-limit-placeholder', 'admin-manage')?>" value="<?=$limit?>" required>
+            </div>
+        </div>
+        <div class="col-md-4 form-group">
+            <input type="submit" class="btn btn-default form-control" value="<?=$lang->g('settings-limit-submit', 'admin-manage')?>" />
+        </div>
+    </form>
+    </div>
+    </div>
+
+</div>
+
+<script>
+$('#toggle-list').click(function(){
+    $(this).text(function(i,old){
+        return old == "<?=$lang->g('books-expand', 'admin-manage')?>" ? "<?=$lang->g('books-collapse', 'admin-manage')?>" : "<?=$lang->g('books-expand', 'admin-manage')?>";
+    });
+});
+</script>

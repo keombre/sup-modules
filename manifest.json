@@ -1,7 +1,7 @@
 {
     "name": "subjects",
     "description": "Allows registration and management of optional subjects.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "min_base_version": "0.2.8",
     "locale": {
         "name": {
@@ -13,18 +13,18 @@
         "settings": {
             "active_version": "INTEGER NULL",
             "open_editing": "INTEGER",
-            "open_accepting": "INTEGER",
-            "subject_limit": "INTEGER NULL"
+            "open_accepting": "INTEGER"
         },
         "versions": {
             "id": "INTEGER PRIMARY KEY",
+            "limit": "INTEGER",
             "name": "TEXT"
         },
         "subjects": {
             "id": "INTEGER PRIMARY KEY",
             "code": "INTEGER",
             "name": "TEXT",
-            "annotaion": "TEXT NULL",
+            "annotation": "TEXT NULL",
             "version": "INTEGER"
         },
         "main": {

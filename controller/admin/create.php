@@ -13,13 +13,14 @@ class create extends upload
         $data = $request->getParsedBody();
 
         $name = substr(filter_var(@$data['name'], \FILTER_SANITIZE_STRING), 0, 30);
+        $limit = filter_var(@$data['limit'], \FILTER_VALIDATE_INT);
         
         if (!is_string($name) || strlen($name) == 0) {
             return $this->redirectWithMessage($response, 'subjects-admin', "error", [
                 $this->container->lang->g('error-version-missing', 'admin-upload')
             ]);
         }
-        if ($name !== $data['name']) {
+        if ($name !== $data['name'] || $limit === false) {
             return $this->redirectWithMessage($response, 'subjects-admin', "error", [
                 $this->container->lang->g('error-version-charset', 'admin-upload')
             ]);
@@ -35,16 +36,16 @@ class create extends upload
             return $parsed;
         }
 
-        $this->db->insert("versions", ["name" => $name]);
+        $this->db->insert("versions", ["name" => $name, "limit" => $limit]);
         $version = $this->db->id();
 
         $save = [];
         foreach ($parsed as $entry) {
             array_push($save, [
-                "code"    => intval($entry[0]),
-                "name"  => trim($entry[1]),
-                "annotaion"  => trim($entry[2]),
-                "version" => $version
+                "code"      => intval($entry[0]),
+                "name"      => trim($entry[1]),
+                "annotation" => trim($entry[2]),
+                "version"   => $version
             ]);
         }
 

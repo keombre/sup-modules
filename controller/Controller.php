@@ -13,8 +13,7 @@ abstract class Controller extends \SUP\Controller
         $this->settings = $this->db->get('settings', [
             'active_version',
             'open_editing',
-            'open_accepting',
-            'subject_limit'
+            'open_accepting'
         ]);
     }
 }
