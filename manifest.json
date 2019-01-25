@@ -9,5 +9,34 @@
             "en": "Optional subjects"
         }
     },
-    "schema": {}
+    "schema": {
+        "settings": {
+            "active_version": "INTEGER NULL",
+            "open_editing": "INTEGER",
+            "open_accepting": "INTEGER"
+        },
+        "versions": {
+            "id": "INTEGER PRIMARY KEY",
+            "name": "TEXT"
+        },
+        "subjects": {
+            "id": "INTEGER PRIMARY KEY",
+            "code": "INTEGER",
+            "name": "TEXT",
+            "annotaion": "TEXT NULL",
+            "version": "INTEGER"
+        },
+        "main": {
+            "id": "INTEGER PRIMARY KEY",
+            "user": "INTEGER",
+            "created": "INTEGER",
+            "state": "INTEGER DEFAULT 0",
+            "version": "INTEGER"
+        },
+        "lists": {
+            "list": "INTEGER",
+            "subject": "INTEGER",
+            "level": "INTEGER DEFAULT 0"
+        }
+    }
 }
