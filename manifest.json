@@ -13,7 +13,8 @@
         "settings": {
             "active_version": "INTEGER NULL",
             "open_editing": "INTEGER",
-            "open_accepting": "INTEGER"
+            "open_accepting": "INTEGER",
+            "subject_limit": "INTEGER NULL"
         },
         "versions": {
             "id": "INTEGER PRIMARY KEY",

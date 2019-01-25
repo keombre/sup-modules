@@ -1,12 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace modules\subjects;
 
-final class init {
-    
+final class init
+{
     private $container;
 
-    function __construct(\Slim\Container $container) {
+    public function __construct(\Slim\Container $container)
+    {
         $this->container = $container;
 
         if (!$this->container->db->count("settings")) {
