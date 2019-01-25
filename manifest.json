@@ -1,0 +1,13 @@
+{
+    "name": "subjects",
+    "description": "Allows registration and management of optional subjects.",
+    "version": "0.0.1",
+    "min_base_version": "0.2.8",
+    "locale": {
+        "name": {
+            "cs": "Volitelné předměty",
+            "en": "Optional subjects"
+        }
+    },
+    "schema": {}
+}

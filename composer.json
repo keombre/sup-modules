@@ -1,0 +1,7 @@
+{
+    "name": "sup-modules/subjects",
+    "description": "Allows registration and management of optional subjects.",
+    "type": "module",
+    "require": {
+    }
+}
