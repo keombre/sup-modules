@@ -2,13 +2,56 @@
 
 namespace modules\subjects\controller\admin;
 
-use modules\subjects\controller\Controller;
+use modules\subjects\controller\admin\upload;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class create extends Controller {
+class create extends upload
+{
+    public function __invoke(Request $request, Response $response, $args)
+    {
+        $data = $request->getParsedBody();
 
-    function __invoke(Request $request, Response $response, $args) {
-        null;
+        $name = substr(filter_var(@$data['name'], \FILTER_SANITIZE_STRING), 0, 30);
+        
+        if (!is_string($name) || strlen($name) == 0) {
+            return $this->redirectWithMessage($response, 'subjects-admin', "error", [
+                $this->container->lang->g('error-version-missing', 'admin-upload')
+            ]);
+        }
+        if ($name !== $data['name']) {
+            return $this->redirectWithMessage($response, 'subjects-admin', "error", [
+                $this->container->lang->g('error-version-charset', 'admin-upload')
+            ]);
+        } elseif ($this->db->has("versions", ["name" => $name])) {
+            return $this->redirectWithMessage($response, 'subjects-admin', "error", [
+                $this->container->lang->g('error-version-exists', 'admin-upload', ['version' => $name])
+            ]);
+        }
+        
+        $parsed = parent::__invoke($request, $response, $args);
+        
+        if (!is_array($parsed)) {
+            return $parsed;
+        }
+
+        $this->db->insert("versions", ["name" => $name]);
+        $version = $this->db->id();
+
+        $save = [];
+        foreach ($parsed as $entry) {
+            array_push($save, [
+                "code"    => intval($entry[0]),
+                "name"  => trim($entry[1]),
+                "annotaion"  => trim($entry[2]),
+                "version" => $version
+            ]);
+        }
+
+        $this->db->insert("subjects", $save);
+        $this->redirectWithMessage($response, 'subjects-admin-manage', "status", [
+            $this->container->lang->g('success', 'admin-upload', ['count' => count($save)])
+        ], ['id' => $version]);
+        return $response;
     }
 }

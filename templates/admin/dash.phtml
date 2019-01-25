@@ -14,7 +14,7 @@
             <input type="hidden" name="_METHOD" value="PUT" />
             <p><?=$lang->g('new-format', 'dash-admin')?>
             <br />
-            <pre>[region id];[author];[name];[genere id]</pre>
+            <pre><?=$lang->g('csv-format', 'admin')?></pre>
             </p>
             <div class="form-group">
                 <label class="col-md-4 control-label" for="name"><?=$lang->g('new-name', 'dash-admin')?></label>
@@ -25,7 +25,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="class"><?=$lang->g('new-list', 'dash-admin')?></label>
                 <div class="col-md-8">
-                    <input type="file" name="book"/><br />
+                    <input type="file" name="subjects"/><br />
                 </div>
             </div>
             <div class="form-group">
@@ -99,6 +99,12 @@ $('#toggle-list').click(function(){
                     <option value="<?=$version['id']?>" <?=@$settings['active_version'] == $version['id']?'selected':''?>><?=$version['name']?></option>
                     <?php endforeach;?>
                 </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="limit"><?=$lang->g('settings-limit', 'dash-admin')?></label>
+            <div class="col-md-6">
+                <input class="form-control" type="number" value="<?=$settings['subject_limit']?>" name="limit" placeholder="<?=$lang->g('settings-limit-placeholder', 'dash-admin')?>">
             </div>
         </div>
         <div class="form-group">
