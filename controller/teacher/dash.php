@@ -10,6 +10,24 @@ class Dash extends Controller
 {
     public function __invoke(Request $request, Response $response, $args)
     {
-        null;
+        $subjects = $this->db->select('subjects', [
+            'id [Index]',
+            'name [String]',
+            'annotation [String]'
+        ], ['version' => $this->settings['active_version']]);
+
+        $count = array_count_values($this->db->select(
+            'lists',
+            ['[>]main' => ['list' => 'id']],
+            'subject',
+            ['main.version' => $this->settings['active_version'], 'main.state' => 2]
+        ));
+        arsort($count);
+
+        return $this->sendResponse($request, $response, "teacher/dash.phtml", [
+            "subjects" => $subjects,
+            "count" => $count,
+            "allowAccepting" => $this->settings['open_accepting'] == 1
+        ]);
     }
 }

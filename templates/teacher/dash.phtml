@@ -1,0 +1,47 @@
+<div class="col-md-12">
+<h3><?=$lang->g('title', 'teacher-dash')?> <small><?=$lang->g('heading', 'teacher-dash')?></small></h3>
+<hr />
+</div>
+<div class="col-md-4 text-center">
+    <?php if ($allowAccepting):?>
+    <a href="<?=$router->pathFor('subjects-teacher-accept')?>" class="btn btn-lg btn-success"><?=$lang->g('accept-button', 'teacher-dash')?></a>
+    <?php else:?>
+    <button class="btn btn-lg btn-success disabled"><?=$lang->g('accept-button', 'teacher-dash')?></button>
+    <?php endif;?>
+    <br /><br />
+    <a href="<?=$router->pathFor('subjects-teacher-view')?>" class="btn btn-default"><?=$lang->g('student-list', 'teacher-dash')?></a>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+    <strong><?=$lang->g('subject-list', 'teacher-dash')?></strong>
+        <div class="pull-right">
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('list-expand', 'teacher-dash')?></a>
+        </div>
+    </div>
+    <?php if (is_array($count) && count($count)):?>
+    <div class="panel-body collapse" id="collapse-list">
+    <table class="table">
+    <thead>
+        <tr><?=$lang->g('subject-table-header', 'teacher-dash')?></tr>
+    </thead>
+    <tbody>
+        <?php foreach($count as $id => $entry):?>
+            <tr><td><?=$subjects[$id]['name']?></td><td><?=$entry?></td></tr>
+        <?php endforeach;?>
+    </tbody>
+    </table>
+    <?php else:?>
+    <div class="panel-body collapse in" id="collapse-list">
+        <span class='text-muted'><?=$lang->g('subject-empty', 'teacher-dash')?></span>
+    <?php endif?>
+    </div>
+    </div>
+</div>
+<script>
+$('#toggle-list').click(function(){
+    $(this).text(function(i,old){
+        return old == "<?=$lang->g('list-expand', 'teacher-dash')?>" ? "<?=$lang->g('list-collapse', 'teacher-dash')?>" : "<?=$lang->g('list-expand', 'teacher-dash')?>";
+    });
+});
+</script>
