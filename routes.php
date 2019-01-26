@@ -15,7 +15,7 @@ class Routes
                 $this->get('', controller\student\Dash::class)
                 ->setName('subjects-student');
 
-                $this->get('/edit', controller\student\Dash::class)
+                $this->get('/edit', controller\student\Edit::class)
                 ->setName('subjects-student-edit');
 
                 $this->get('/preview', controller\student\Dash::class)
@@ -31,6 +31,9 @@ class Routes
                 
                 $this->get('/view', controller\teacher\View::class)
                 ->setName('subjects-teacher-view');
+
+                $this->get('/preview', controller\teacher\View::class)
+                ->setName('subjects-teacher-preview');
             })->add(\middleware\auth\Teacher::class);
 
             $this->group('/admin', function () {

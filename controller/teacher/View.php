@@ -16,7 +16,10 @@ class View extends Controller
         //return (new \modules\lists\controller\preview($this->container))->withListID($listID)->preview($request, $response, $args);
         } else {
             $students = [];
-            foreach ($this->db->select('main', ['id', 'user'], ['version' => $this->settings['active_version'], 'state' => 2]) as $entry) {
+            foreach ($this->db->select('main', [
+                'id [Index]',
+                'user [Int]'
+            ], ['version' => $this->settings['active_version'], 'state' => 2]) as $entry) {
                 $students[] = [
                     'user' => $this->container->factory->userFromID($entry['user']),
                     'list' => $entry['id']
