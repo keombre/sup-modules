@@ -2,7 +2,7 @@
 
 namespace modules\subjects;
 
-final class init
+final class Init
 {
     private $container;
 
