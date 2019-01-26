@@ -97,12 +97,23 @@ $('#toggle-list').click(function(){
         <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
         <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
         <div class="form-group">
-            <label class="col-md-5 control-label" for="active"><?=$lang->g('settings-version', 'admin-dash')?></label>
+            <label class="col-md-5 control-label" for="active7"><?=$lang->g('settings-version7', 'admin-dash')?></label>
             <div class="col-md-6">
-                <select class="form-control" name="active" required>
+                <select class="form-control" name="active7" required>
                     <option disabled selected value=""><?=$lang->g('settings-version-choose', 'admin-dash')?></option>
                     <?php foreach ($versions as $version):?>
-                    <option value="<?=$version['id']?>" <?=@$settings['active_version'] == $version['id']?'selected':''?>><?=$version['name']?></option>
+                    <option value="<?=$version['id']?>" <?=@$settings['active_version_7'] == $version['id']?'selected':''?>><?=$version['name']?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="active8"><?=$lang->g('settings-version8', 'admin-dash')?></label>
+            <div class="col-md-6">
+                <select class="form-control" name="active8" required>
+                    <option disabled selected value=""><?=$lang->g('settings-version-choose', 'admin-dash')?></option>
+                    <?php foreach ($versions as $version):?>
+                    <option value="<?=$version['id']?>" <?=@$settings['active_version_8'] == $version['id']?'selected':''?>><?=$version['name']?></option>
                     <?php endforeach;?>
                 </select>
             </div>

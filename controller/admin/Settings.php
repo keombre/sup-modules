@@ -14,16 +14,20 @@ class Settings extends Controller
         
         $edit = $this->sanitizePost($request, 'edit', FILTER_SANITIZE_STRING);
         $accept = $this->sanitizePost($request, 'accept', FILTER_SANITIZE_STRING);
-        $active = $this->sanitizePost($request, 'active', FILTER_SANITIZE_STRING);
+        $active7 = $this->sanitizePost($request, 'active7', FILTER_SANITIZE_STRING);
+        $active8 = $this->sanitizePost($request, 'active8', FILTER_SANITIZE_STRING);
 
-        if (!$this->container->db->has("versions", ["id" => $active])) {
+        if (!$this->container->db->has("versions", ["id" => $active7]) ||
+            !$this->container->db->has("versions", ["id" => $active8])
+        ) {
             return $this->redirectWithMessage($response, 'subjects-admin', "error", [
                 $this->container->lang->g('settings-version-notfound', 'admin-dash')
             ]);
         }
         
         $store = [
-            "active_version" => $active,
+            "active_version_7" => $active7,
+            "active_version_8" => $active8,
             "open_editing"   => $edit == "on",
             "open_accepting"  => $accept == "on"
         ];

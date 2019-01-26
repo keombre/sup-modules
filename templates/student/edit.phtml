@@ -11,12 +11,12 @@
     <div class="list-group">
         <?php foreach ($subjects as $subject):?>
         <div class="list-group-item <?=
-is_numeric($subject['level']) ? [
-    'list-group-item-success',
-    'list-group-item-info',
-    'list-group-item-warning'
-    ][$subject['level']] : ''
-?>" style="display: flow-root">
+            is_numeric($subject['level']) ? [
+                'list-group-item-success',
+                'list-group-item-info',
+                'list-group-item-warning'
+                ][$subject['level']] : ''
+            ?>" style="display: flow-root">
             <div class="col-md-10">
                 <h4 class="list-group-item-heading " style="margin-bottom: 10px;">
                 <?php if (is_numeric($subject['level'])):?>
@@ -35,11 +35,11 @@ is_numeric($subject['level']) ? [
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="btn">Zapsat</a></li>
-                        <li><a href="#" class="btn">Náhradní předmět</a></li>
-                        <li><a href="#" class="btn">Dobrovolný seminář</a></li>
+                        <li><a href="#" class="btn <?=$subject['level'] === 0?'disabled':''?>">Zapsat</a></li>
+                        <li><a href="#" class="btn <?=$subject['level'] === 1?'disabled':''?>">Náhradní předmět</a></li>
+                        <li><a href="#" class="btn <?=$subject['level'] === 2?'disabled':''?>">Dobrovolný seminář</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" class="btn disabled">Zrušit zápis</a></li>
+                        <li><a href="#" class="btn <?=$subject['level'] === false?'disabled':''?>">Zrušit zápis</a></li>
                     </ul>
                 </div>
             </div>

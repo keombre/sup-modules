@@ -11,7 +11,8 @@
     },
     "schema": {
         "settings": {
-            "active_version": "INTEGER NULL",
+            "active_version_7": "INTEGER NULL",
+            "active_version_8": "INTEGER NULL",
             "open_editing": "INTEGER",
             "open_accepting": "INTEGER"
         },

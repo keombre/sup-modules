@@ -133,14 +133,13 @@ class Accept extends Controller
     {
         $userID = $this->db->get('main', 'user', ['id' => $listID]);
         $this->db->update('main', [
-            'state' => 1,
-            'accepted_by' => $this->container->auth->getUser()->getID()
+            'state' => 1
         ], [
             'version' => $this->settings['active_version'],
             'state'   => 2,
             'user'    => $userID
         ]);
 
-        $this->db->update('main', ['state' => 2], ['id' => $listID]);
+        $this->db->update('main', ['state' => 2, 'accepted_by' => $this->container->auth->getUser()->getID()], ['id' => $listID]);
     }
 }
