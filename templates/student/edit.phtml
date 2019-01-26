@@ -1,11 +1,12 @@
 <div class="col-md-12">
-    <h3>Zápis Volitelnách předmětů <small>změny jsou průběžně ukládány</small>
+    <h3>Zápis volitelných předmětů <small>změny jsou průběžně ukládány</small>
         <div class="btn-group pull-right">
             <a href="#" class="btn btn-success">Dokončit zápis</a>
             <a href="<?=$router->pathFor('subjects-student')?>" class="btn btn-default">Zpět</a>
         </div>
     </h3>
     <hr />
+    <span class="pull-right <?=$counts[0]>$counts[1]||$counts[2]>2?'text-danger':''?>" style="margin-bottom: 9px; margin-top: -8px;">Zapsáno <b><?=$counts[0]?>/<?=$counts[1]?></b> volitelných a <b><?=$counts[2]?>/2</b> náhradních předmětů</span>
 </div>
 <div class="col-md-12">
     <div class="list-group">
@@ -20,9 +21,9 @@
             <div class="col-md-10">
                 <h4 class="list-group-item-heading " style="margin-bottom: 10px;">
                 <?php if (is_numeric($subject['level'])):?>
-                    <small>Zapsáno jako <b><?=['volitelný předmět', 'náhradní předmět', 'dobrovolný seminář'][$subject['level']]?></b></small><br /><br />
+                    <small style="margin-bottom: 9px;display: inline-block;">Zapsáno jako <b><?=['volitelný předmět', 'náhradní předmět', 'dobrovolný seminář'][$subject['level']]?></b></small><br />
                 <?php endif;?>
-                <?=$subject['name']?>
+                <b><?=$subject['name']?></b>
                 </h4>
                 <p class="list-group-item-text">
                     <?=str_replace('\n', '<br /><br />', $subject['annotation'])?>
@@ -30,16 +31,16 @@
             </div>
             <div class="col-md-2">
                 <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default"><?=is_numeric($subject['level'])?'Zrušit zápis':'Zapsat'?></button>
+                    <button type="button" onclick="send(this, '<?=$subject['id']?>', '<?=is_numeric($subject['level'])?'cancel':'enrol'?>')" class="btn btn-default"><?=is_numeric($subject['level'])?'Zrušit zápis':'Zapsat'?></button>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="btn <?=$subject['level'] === 0?'disabled':''?>">Zapsat</a></li>
-                        <li><a href="#" class="btn <?=$subject['level'] === 1?'disabled':''?>">Náhradní předmět</a></li>
-                        <li><a href="#" class="btn <?=$subject['level'] === 2?'disabled':''?>">Dobrovolný seminář</a></li>
+                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'enrol');" class="btn <?=$subject['level'] === 0?'disabled':''?>">Zapsat</a></li>
+                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'spare');" class="btn <?=$subject['level'] === 1?'disabled':''?>">Náhradní předmět</a></li>
+                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'option');" class="btn <?=$subject['level'] === 2?'disabled':''?>">Dobrovolný seminář</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" class="btn <?=$subject['level'] === false?'disabled':''?>">Zrušit zápis</a></li>
+                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'cancel');" class="btn <?=$subject['level'] === false?'disabled':''?>">Zrušit zápis</a></li>
                     </ul>
                 </div>
             </div>
@@ -47,3 +48,23 @@
         <?php endforeach;?>
     </div>
 </div>
+
+<form method="post" action="<?=$router->pathFor('subjects-student-edit', ["id" => $listID])?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <input type="hidden" name="subject" id="form-subject" />
+    <input type="hidden" name="action" id="form-action" />
+</form>
+
+<script>
+function send(elm, subject, action) {
+    if (elm.getAttribute('class').includes('disabled')) {
+        return false;
+    }
+    document.getElementById('form-subject').value = subject
+    var tmp = document.getElementById('form-action')
+    tmp.value = action
+    tmp.parentNode.submit()
+}
+</script>

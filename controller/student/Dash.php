@@ -11,14 +11,14 @@ class Dash extends Controller
     public function __invoke(Request $request, Response $response, $args)
     {
         if ($this->settings['open_editing']) {
-            $listgroups = $this->db->select("main", [
+            $listgroups = $this->db->select('main', [
                 'id [Index]',
                 'created [Int]',
                 'state [Int]',
                 'accepted_by [Int]'
             ], [
-                "user" => $this->container->auth->getUser()->getID(),
-                "version" => $this->settings['active_version']
+                'user' => $this->container->auth->getUser()->getID(),
+                'version' => $this->settings['active_version']
             ]);
 
             foreach ($listgroups as $id => $list) {
@@ -26,8 +26,10 @@ class Dash extends Controller
                     $listgroups[$id]['accepted_by'] = $this->container->factory->userFromID($listgroups[$id]['accepted_by']);
                 }
             }
-            
-            $response = $this->sendResponse($request, $response, "student/dash.phtml", ["lists" => $listgroups]);
+
+            $response = $this->sendResponse($request, $response, 'student/dash.phtml', [
+                'lists' => $listgroups
+            ]);
         } else {
             $response->getBody()->write($this->container->lang->g('denied', 'student-dash'));
         }

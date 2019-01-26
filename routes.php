@@ -15,10 +15,10 @@ class Routes
                 $this->get('', controller\student\Dash::class)
                 ->setName('subjects-student');
 
-                $this->get('/edit', controller\student\Edit::class)
+                $this->map(['GET', 'PUT'], '/edit[/[{id}]]', controller\student\Edit::class)
                 ->setName('subjects-student-edit');
 
-                $this->get('/preview', controller\student\Dash::class)
+                $this->map(['GET', 'PUT'], '/preview/{id}', controller\student\Dash::class)
                 ->setName('subjects-student-preview');
             })->add(\middleware\auth\Student::class);
 
@@ -26,13 +26,13 @@ class Routes
                 $this->get('', controller\teacher\Dash::class)
                 ->setName('subjects-teacher');
 
-                $this->get('/accept', controller\teacher\Accept::class)
+                $this->map(['GET', 'PUT'], '/accept[/{id}]', controller\teacher\Accept::class)
                 ->setName('subjects-teacher-accept');
                 
                 $this->get('/view', controller\teacher\View::class)
                 ->setName('subjects-teacher-view');
 
-                $this->get('/preview', controller\teacher\View::class)
+                $this->get('/preview/{id}', controller\teacher\View::class)
                 ->setName('subjects-teacher-preview');
             })->add(\middleware\auth\Teacher::class);
 
@@ -51,7 +51,7 @@ class Routes
 
                 $this->map(['GET', 'PUT'], '/manage/{id}', controller\admin\Manage::class)
                 ->setName('subjects-admin-manage');
-            })->add(\middleware\auth\admin::class);
+            })->add(\middleware\auth\Admin::class);
         })->add(\middleware\layout::class);
     }
 }
