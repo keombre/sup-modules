@@ -16,14 +16,14 @@
     <div class="panel-heading">
     <strong>Seznam knih</strong>
         <div class="pull-right">
-            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('list-expand', 'dash-admin')?></a>
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('lists-expand', 'dash-admin')?></a>
         </div>
     </div>
     <?php if (is_array($count) && count($count)):?>
     <div class="panel-body collapse" id="collapse-list">
     <table class="table">
     <thead>
-        <tr><th>Kniha</th><th>Autor</th><th>Počet</th></tr>
+        <tr><th>Autor</th><th>Kniha</th><th>Počet</th></tr>
     </thead>
     <tbody>
         <?php foreach($count as $id => $entry):?>
@@ -41,7 +41,7 @@
 <script>
 $('#toggle-list').click(function(){
     $(this).text(function(i,old){
-        return old == "<?=$lang->g('list-expand', 'dash-admin')?>" ? "<?=$lang->g('list-collapse', 'dash-admin')?>" : "<?=$lang->g('list-expand', 'dash-admin')?>";
+        return old == "<?=$lang->g('lists-expand', 'dash-admin')?>" ? "<?=$lang->g('lists-collapse', 'dash-admin')?>" : "<?=$lang->g('lists-expand', 'dash-admin')?>";
     });
 });
-</script><?=$lang->g('', 'dash-admin')?>
+</script>

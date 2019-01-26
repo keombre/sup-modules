@@ -54,7 +54,7 @@ class upload extends \sup\controller {
                 strlen($data[2]) == 0
             )
                 return $line + 1;
-            $list[$line] = $data;
+            $list[$line] = filter_var_array($data, \FILTER_SANITIZE_STRING);
             $line++;
         }
         return $list;

@@ -114,7 +114,10 @@ class accept extends \sup\controller {
 
     private function acceptList($listID) {
         $userID = $this->db->get('main', 'user', ['id' => $listID]);
-        $this->db->update('main', ['state' => 1], [
+        $this->db->update('main', [
+            'state' => 1,
+            'accepted_by' => $this->container->auth->getUser()->getID()
+        ], [
             'version' => $this->settings['active_version'],
             'state'   => 2,
             'user'    => $userID
