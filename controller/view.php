@@ -10,6 +10,12 @@ class view extends lists {
                 "user" => $this->userID,
                 "version" => $this->settings['active_version']
             ]);
+
+            foreach ($listgroups as $id => $list) {
+                if ($listgroups[$id]['state'] == 2) {
+                    $listgroups[$id]['accepted_by'] = $this->container->factory->userFromID($listgroups[$id]['accepted_by']);
+                }
+            }
             
             $response = $this->sendResponse($request, $response, "view.phtml", ["lists" => $listgroups]);
         } else {
