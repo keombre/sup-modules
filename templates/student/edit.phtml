@@ -9,23 +9,28 @@
 </div>
 <div class="col-md-12">
     <div class="list-group">
-        <div class="list-group-item list-group-item-success" style="display: flow-root">
+        <?php foreach ($subjects as $subject):?>
+        <div class="list-group-item <?=
+is_numeric($subject['level']) ? [
+    'list-group-item-success',
+    'list-group-item-info',
+    'list-group-item-warning'
+    ][$subject['level']] : ''
+?>" style="display: flow-root">
             <div class="col-md-10">
-                <h4 class="list-group-item-heading"><small>Zapsáno jako <b>volitelný předmět</b></small><br /><br />CAE – Certificate in Advanced English</h4>
+                <h4 class="list-group-item-heading " style="margin-bottom: 10px;">
+                <?php if (is_numeric($subject['level'])):?>
+                    <small>Zapsáno jako <b><?=['volitelný předmět', 'náhradní předmět', 'dobrovolný seminář'][$subject['level']]?></b></small><br /><br />
+                <?php endif;?>
+                <?=$subject['name']?>
+                </h4>
                 <p class="list-group-item-text">
-                    Příprava na zkoušky Cambridge zkoušky CAE na úrovni C1. Probírání vzorových testů a
-                    rozbor jejich zvládnutí v oblasti čtení, poslechu, gramatiky, eseje a ústní části. Rozšiřování
-                    slovní zásoby nutné pro zvládnutí těchto testů. Seminář je určen pro studenty na vyšší úrovni
-                    AJ.
-                    <br /><br />
-                    Spolupráce s jazykovou agenturou Cambridge P.A.R.K. U této agentury se zároveň studenti
-                    mohou na začátku roku závazně na zkoušku přihlásit a na jaře 2019 ji absolvovat v budově
-                    naší školy. Pro přihlášené je mock test zdarma.
+                    <?=str_replace('\n', '<br /><br />', $subject['annotation'])?>
                 </p>
             </div>
             <div class="col-md-2">
                 <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default">Zrušit</button>
+                    <button type="button" class="btn btn-default"><?=is_numeric($subject['level'])?'Zrušit zápis':'Zapsat'?></button>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                     </button>
@@ -39,13 +44,6 @@
                 </div>
             </div>
         </div>
-        <div class="list-group-item" style="display: flow-root">
-            <h4 class="list-group-item-heading">List group item heading</h4>
-            <p class="list-group-item-text">...</p>
-        </div>
-        <div class="list-group-item" style="display: flow-root">
-            <h4 class="list-group-item-heading">List group item heading</h4>
-            <p class="list-group-item-text">...</p>
-        </div>
+        <?php endforeach;?>
     </div>
 </div>
