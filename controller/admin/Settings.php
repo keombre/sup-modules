@@ -18,7 +18,7 @@ class Settings extends Controller
 
         if (!$this->container->db->has("versions", ["id" => $active])) {
             return $this->redirectWithMessage($response, 'subjects-admin', "error", [
-                $this->container->lang->g('settings-version-notfound', 'dash-admin')
+                $this->container->lang->g('settings-version-notfound', 'admin-dash')
             ]);
         }
         
@@ -34,7 +34,7 @@ class Settings extends Controller
         }
 
         return $this->redirectWithMessage($response, 'subjects-admin', "status", [
-            $this->container->lang->g('settings-saved', 'dash-admin')
+            $this->container->lang->g('settings-saved', 'admin-dash')
         ]);
     }
 }

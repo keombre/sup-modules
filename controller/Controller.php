@@ -6,6 +6,8 @@ use \Slim\Container;
 
 abstract class Controller extends \SUP\Controller
 {
+    protected $settings;
+
     public function __construct(Container $container)
     {
         parent::__construct($container);

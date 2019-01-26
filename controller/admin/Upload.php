@@ -62,8 +62,7 @@ class Upload extends Controller
             if (\count($data) != 3) {
                 return $line + 1;
             }
-            if (
-                !\is_numeric($data[0]) ||
+            if (!\is_numeric($data[0]) ||
                 !\is_string($data[1]) ||
                 !\is_string($data[2])
             ) {

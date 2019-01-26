@@ -19,6 +19,13 @@ class Routes
             $this->group('/teacher', function () {
                 $this->get('', controller\teacher\Dash::class)
                 ->setName('subjects-teacher');
+
+                $this->get('/accept', controller\teacher\Accept::class)
+                ->setName('subjects-teacher-accept');
+                
+                $this->get('/view', controller\teacher\View::class)
+                ->setName('subjects-teacher-view');
+                
             })->add(\middleware\auth\Teacher::class);
 
             $this->group('/admin', function () {
