@@ -1,0 +1,29 @@
+<h3><?=$lang->g('title', 'student-dash')?></h3>
+<hr />
+<div class="panel panel-default">
+<div class="panel-heading">
+    <strong><?=$lang->g('list-title', 'student-dash')?></strong>
+    <span class="pull-right"><a href="<?=$router->pathFor('subjects-student-edit');?>"><span class="glyphicon glyphicon-plus"></span> <?=$lang->g('list-new', 'student-dash')?></a></span>
+</div>
+<div class="panel-body">
+<?php if (is_array($lists) && count($lists)):?>
+    <ul class='list-group'>
+    <?php foreach($lists as $info):?>
+    <li class='list-group-item'>
+        <a href='<?=$info['state']==0?$router->pathFor('subjects-student-edit', ['id' => $info['id']]):$router->pathFor('subjects-student-preview', ['id' => $info['id']])?>'><?=date("d. m. Y - G:i", $info['created'])?></a>
+    <?php if ($info['state'] == 0):?>
+        <span style='margin-top: 2px;' class='label label-info pull-right'><?=$lang->g('list-state-new', 'student-dash')?></span>
+    <?php elseif ($info['state'] == 1):?>
+        <span style='margin-top: 2px;' class='label label-primary pull-right'><?=$lang->g('list-state-sent', 'student-dash')?></span>
+    <?php elseif ($info['state'] == 2):?>
+        <span style='margin-top: 2px;' class='label label-success pull-right'><?=$lang->g('list-state-accepted', 'student-dash')?></span>
+        <small style='margin-right: 15px; margin-top: 2px;' class='pull-right'><?=$lang->g('list-acceptedby', 'student-dash')?><b><?=$info['accepted_by']->getAnyName()?></b></small>
+    <?php endif;?>
+    </li>
+    <?php endforeach;?>
+    </ul>
+<?php else:?>
+    <span class='text-muted'><?=$lang->g('list-empty', 'student-dash')?></span>
+<?php endif?>
+</div>
+</div>

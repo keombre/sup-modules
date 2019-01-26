@@ -12,7 +12,7 @@
         <div class="panel-body">
             <?php if (is_array(@$students) && count($students)):?>
                 <ul class='list-group'>
-                    <?php foreach($students as $student):?>
+                    <?php foreach ($students as $student):?>
                         <li class='list-group-item'><?=$student['user']->getName()?> (<?=$student['user']->getUname()?>) <b><?=$student['user']->getAttribute('class')?></b>
                             <span class='pull-right'>Kánon: <a href="<?=$router->pathFor('lists-teacher-view', ['id' => $student['list']])?>"><?=$student['list']?></a></span>
                         </li>
