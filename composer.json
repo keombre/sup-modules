@@ -3,5 +3,6 @@
     "description": "Allows registration and management of optional subjects.",
     "type": "module",
     "require": {
+        "setasign/fpdf": "1.8.1"
     }
 }

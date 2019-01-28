@@ -26,7 +26,7 @@ class Edit extends Controller
             }
         }
 
-        $subjectes = $this->db->select('subjects', [
+        $subjects = $this->db->select('subjects', [
             'id [Index]',
             'name [String]',
             'annotation [String]'
@@ -47,7 +47,7 @@ class Edit extends Controller
             $subject = \filter_var($data['subject'], \FILTER_SANITIZE_STRING);
             $action  = \filter_var($data['action'], \FILTER_SANITIZE_STRING);
 
-            if (!\array_key_exists($subject, $subjectes)) {
+            if (!\array_key_exists($subject, $subjects)) {
                 return $this->invalidRequest($response);
             }
             
@@ -116,8 +116,8 @@ class Edit extends Controller
         $selectedCount = 0;
         $spareCount = 0;
 
-        foreach ($subjectes as $id => $subject) {
-            $subjectes[$id]['level'] = $selected[$id]['level'] ?? false;
+        foreach ($subjects as $id => $subject) {
+            $subjects[$id]['level'] = $selected[$id]['level'] ?? false;
 
             if (($selected[$id]['level'] ?? false) === 0) {
                 $selectedCount++;
@@ -130,7 +130,7 @@ class Edit extends Controller
 
         $this->sendResponse($request, $response, "student/edit.phtml", [
             "counts" => [$selectedCount, $limit['limit'], $spareCount],
-            "subjects" => $subjectes,
+            "subjects" => $subjects,
             "listID" => $this->listID
         ]);
     }

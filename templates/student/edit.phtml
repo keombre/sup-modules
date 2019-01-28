@@ -1,12 +1,18 @@
 <div class="col-md-12">
     <h3>Zápis volitelných předmětů <small>změny jsou průběžně ukládány</small>
         <div class="btn-group pull-right">
-            <a href="#" class="btn btn-success">Dokončit zápis</a>
+            <?php if (isset($listID) && !is_null($listID) && $counts[0] == $counts[1] && $counts[2] == 2):?>
+            <a href="<?=$router->pathFor('subjects-student-preview', ['id' => $listID])?>" class="btn btn-success">Dokončit zápis</a>
+            <?php else:?>
+            <button class="btn btn-success disabled">Dokončit zápis</button>
+            <?php endif;?>
             <a href="<?=$router->pathFor('subjects-student')?>" class="btn btn-default">Zpět</a>
         </div>
     </h3>
     <hr />
-    <span class="pull-right <?=$counts[0]>$counts[1]||$counts[2]>2?'text-danger':''?>" style="margin-bottom: 9px; margin-top: -8px;">Zapsáno <b><?=$counts[0]?>/<?=$counts[1]?></b> volitelných a <b><?=$counts[2]?>/2</b> náhradních předmětů</span>
+    <span class="pull-right <?=$counts[0]>$counts[1]||$counts[2]>2?'text-danger':''?>" style="margin-bottom: 9px; margin-top: -8px;">
+        Zapsáno <b><?=$counts[0]?>/<?=$counts[1]?></b> volitelných a <b><?=$counts[2]?>/2</b> náhradních předmětů
+    </span>
 </div>
 <div class="col-md-12">
     <div class="list-group">
