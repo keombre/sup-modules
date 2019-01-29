@@ -16,17 +16,20 @@ abstract class GeneratePDF extends Controller
 
         $listID = \filter_var($args['id'], \FILTER_SANITIZE_STRING);
         
-        $userID = $this->db->get('main', 'user', [
+        $listInfo = $this->db->get('main', ['user [Int]', 'version [Int]'], [
             'id' => $listID,
-            'version' => $this->settings['active_version'],
+            'version' => [
+                $this->settings['active_version_7'],
+                $this->settings['active_version_8']
+            ],
             'state[!]' => 0
         ]);
         
-        if (is_null($userID)) {
+        if ($listInfo == false || count($listInfo) == 0) {
             return $this->notFound($response);
         }
 
-        $user = $this->container->factory->userFromID((int) $userID);
+        $user = $this->container->factory->userFromID($listInfo['user']);
 
         if (is_null($user)) {
             return $this->notFound($response);
@@ -58,7 +61,7 @@ abstract class GeneratePDF extends Controller
             ];
         }, $subjects);
 
-        $versionName = $this->db->get('versions', 'name', ['id' => $this->settings['active_version']]);
+        $versionName = $this->db->get('versions', 'name', ['id' => $listInfo['version']]);
 
         $generator = new \SUP\PDF\Generate($this->container, $this->container->lang->g('title', 'pdf'), $versionName);
         $generator->setContent(substr_replace($listID, ' - ', 3, 0), 'C' . $listID . '-U' . $user->getUName(), $qrURL, $user);

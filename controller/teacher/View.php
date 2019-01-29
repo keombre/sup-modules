@@ -14,7 +14,10 @@ class View extends Controller
         foreach ($this->db->select('main', [
             'id [Index]',
             'user [Int]'
-        ], ['version' => $this->settings['active_version'], 'state' => 2]) as $entry) {
+        ], ['version' => [
+            $this->settings['active_version_7'],
+            $this->settings['active_version_8']
+        ], 'state' => 2]) as $entry) {
             $students[] = [
                 'user' => $this->container->factory->userFromID($entry['user']),
                 'list' => $entry['id']

@@ -14,13 +14,19 @@ class Dash extends Controller
             'id [Index]',
             'name [String]',
             'annotation [String]'
-        ], ['version' => $this->settings['active_version']]);
+        ], ['version' => [
+            $this->settings['active_version_7'],
+            $this->settings['active_version_8']
+        ]]);
 
         $count = array_count_values($this->db->select(
             'lists',
             ['[>]main' => ['list' => 'id']],
             'subject',
-            ['main.version' => $this->settings['active_version'], 'main.state' => 2]
+            ['main.version' => [
+                $this->settings['active_version_7'],
+                $this->settings['active_version_8']
+            ], 'main.state' => 2]
         ));
         arsort($count);
 
