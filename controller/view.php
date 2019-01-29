@@ -5,7 +5,7 @@ namespace modules\lists\controller;
 class view extends lists {
 
     public function student($request, &$response, $args) {
-        if ($this->settings['open_editing']) {
+        if ($this->settings['open_editing'] && $this->container->auth->getUser()->getAttribute('year') == 8) {
             $listgroups = $this->db->select("main", "*", [
                 "user" => $this->userID,
                 "version" => $this->settings['active_version']
