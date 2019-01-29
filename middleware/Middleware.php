@@ -19,7 +19,11 @@ abstract class Middleware extends \SUP\Middleware
             'open_accepting'
         ]);
         $year = $this->container->auth->getUser()->getAttribute('year');
-        $year = (!\is_numeric($year) || ($year != 7 && $year != 8)) ? null : $year;
+        
+        if (!\is_numeric($year) || ($year != 7 && $year != 8)) {
+            $this->settings['open_editing'] = false;
+            $year = null;
+        }
 
         $this->settings = [
             'open_editing' => \is_null($year) ? false : $settings['open_editing'],

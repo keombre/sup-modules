@@ -23,7 +23,7 @@ class Routes
                 ->add(middleware\student\Validate::class)
                 ->setName('subjects-student-preview');
 
-                $this->get('/generate/{id}', controller\student\generatePDF::class)
+                $this->get('/generate/{id}', controller\student\Generate::class)
                 ->setName('subjects-student-generate');
             })
             ->add(\middleware\auth\Student::class)
@@ -41,8 +41,8 @@ class Routes
                 $this->get('/view', controller\teacher\View::class)
                 ->setName('subjects-teacher-view');
 
-                $this->get('/preview/{id}', controller\student\Preview::class)
-                ->setName('subjects-teacher-preview');
+                $this->get('/generate/{id}', controller\teacher\Generate::class)
+                ->setName('subjects-teacher-generate');
             })
             ->add(\middleware\auth\Teacher::class);
 
