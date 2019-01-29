@@ -26,7 +26,7 @@ class Routes
                 $this->get('/generate/{id}', controller\student\Generate::class)
                 ->setName('subjects-student-generate');
             })
-            ->add(\middleware\auth\Student::class)
+            ->add(\middleware\auth\student::class)
             ->add(middleware\student\OpenEditing::class);
 
             // ------- teacher -------
@@ -44,7 +44,7 @@ class Routes
                 $this->get('/generate/{id}', controller\teacher\Generate::class)
                 ->setName('subjects-teacher-generate');
             })
-            ->add(\middleware\auth\Teacher::class);
+            ->add(\middleware\auth\teacher::class);
 
             // ------- admin -------
             $this->group('/admin', function () {
@@ -62,7 +62,7 @@ class Routes
 
                 $this->map(['GET', 'PUT'], '/manage/{id}', controller\admin\Manage::class)
                 ->setName('subjects-admin-manage');
-            })->add(\middleware\auth\Admin::class);
+            })->add(\middleware\auth\admin::class);
         })->add(\middleware\layout::class);
     }
 }

@@ -101,11 +101,17 @@ class Accept extends Controller
 
     private function validateList($code)
     {
-        if (!$this->db->has("main", ['id' => $code['code'], 'version' => $this->settings['active_version']])) {
+        if (!$this->db->has("main", ['id' => $code['code'], 'version' => [
+            $this->settings['active_version_7'],
+            $this->settings['active_version_8']
+        ]])) {
             return false;
         }
 
-        $list = $this->db->get('main', '*', ['id' => $code['code'], 'version' => $this->settings['active_version']]);
+        $list = $this->db->get('main', '*', ['id' => $code['code'], 'version' => [
+            $this->settings['active_version_7'],
+            $this->settings['active_version_8']
+        ]]);
 
         if (array_key_exists('user', $code)) {
             $user = $this->container->factory->userFromID((int) $list['user']);
@@ -132,7 +138,10 @@ class Accept extends Controller
         $this->db->update('main', [
             'state' => 1
         ], [
-            'version' => $this->settings['active_version'],
+            'version' => [
+                $this->settings['active_version_7'],
+                $this->settings['active_version_8']
+            ],
             'state'   => 2,
             'user'    => $userID
         ]);
