@@ -38,8 +38,6 @@ class Preview extends Controller
             }
         }
 
-        $userInfo = $this->container->auth->getUser();
-
         $subjects = $this->db->select('lists', [
             '[>]subjects' => ['subject' => 'id']
         ], [
@@ -54,7 +52,6 @@ class Preview extends Controller
         $versionName = $this->db->get('versions', 'name', ['id' => $this->settings['active_version']]);
 
         $this->sendResponse($request, $response, "student/preview.phtml", [
-            "userInfo" => $userInfo,
             "subjects" => $subjects,
             "listID" => $listID,
             "state" => $state['state']

@@ -1,10 +1,10 @@
 <div class="panel panel-default">
     <div class="panel-body">
-        <p>Kánon zkontrolujte, odešlete a poté vytiskněte.</p>
+        <p>Seznam zkontrolujte, odešlete a poté vytiskněte.</p>
         <?php if ($state != 0):?>
         <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>">Zpět</a>
         <div class="pull-right btn-group">
-            <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="Kánon již byl odeslán">Odeslat</button>
+            <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="Seznam již byl odeslán">Odeslat</button>
             <button class="btn btn-primary" onclick="window.print()">Tisk</button>
         </div>
         <?php else:?>
@@ -12,24 +12,30 @@
         <div class="pull-right">
             <div class="btn-group">
                 <button class="btn btn-success" onclick="document.getElementById('send').submit()">Odeslat</button>
-                <button class="btn btn-primary disabled" data-toggle="tooltip" data-placement="top" title="Před tiskem kánon odešlete">Tisk</button>
+                <button class="btn btn-primary disabled" data-toggle="tooltip" data-placement="top" title="Před tiskem seznam odešlete">Tisk</button>
             </div>
         </div>
         <?php endif?>
     </div>
 </div>
-<h4>Knihy</h4>
+<h4>Předměty</h4>
 <table class="table table-hover table-condensed">
     <thead>
         <tr>
-            <th class="col-md-2">Autor</th>
-            <th class="col-md-4">Dílo</th>
+            <th class="col-md-1">Kód</th>
+            <th class="col-md-6">Předmět</th>
+            <th class="col-md-5">Typ zápisu</th>
         </tr>
     </thead>
     <?php foreach($subjects as $subject):?>
     <tr>
         <td><?=$subject['code']?></td>
         <td><?=$subject['name']?></td>
+        <td><?=[
+            'Volitelný předmět',
+            'Náhradní předmět',
+            'Dobrovolný seminář'
+        ][$subject['level']]?></td>
     </tr>
     <?php endforeach;?>
 </table>
