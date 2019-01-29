@@ -10,6 +10,8 @@ class Generate extends GeneratePDF
 {
     protected function notFound(&$response)
     {
-        return $this->redirectWithMessage($response, 'subjects-teacher', "error", ['Seznam nenalezen']);
+        return $this->redirectWithMessage($response, 'subjects-teacher', "error", [
+            $this->container->lang->g('notfound', 'teacher-generate')
+        ]);
     }
 }

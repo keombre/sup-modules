@@ -1,41 +1,37 @@
 <div class="panel panel-default">
     <div class="panel-body">
-        <p>Seznam zkontrolujte, odešlete a poté vytiskněte.</p>
+        <p><?=$lang->g('heading', 'student-preview')?></p>
         <?php if ($state != 0):?>
-        <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>">Zpět</a>
+        <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>"><?=$lang->g('back', 'student-preview')?></a>
         <div class="pull-right btn-group">
-            <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="Seznam již byl odeslán">Odeslat</button>
-            <button class="btn btn-primary" onclick="document.getElementById('pdf').contentWindow.print()">Tisk</button>
+            <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="<?=$lang->g('already-sent', 'student-preview')?>"><?=$lang->g('send', 'student-preview')?></button>
+            <a href="<?=$router->pathFor('subjects-student-generate', ['id' => $listID])?>" target="_blank" class="btn btn-primary"><?=$lang->g('print', 'student-preview')?></a>
         </div>
         <?php else:?>
-        <a class="btn btn-default" href="<?=$router->pathFor('subjects-student-edit', ["id" => $listID])?>">Zpět</a>
+        <a class="btn btn-default" href="<?=$router->pathFor('subjects-student-edit', ["id" => $listID])?>"><?=$lang->g('back', 'student-preview')?></a>
         <div class="pull-right">
             <div class="btn-group">
-                <button class="btn btn-success" onclick="document.getElementById('send').submit()">Odeslat</button>
-                <button class="btn btn-primary disabled" data-toggle="tooltip" data-placement="top" title="Před tiskem seznam odešlete">Tisk</button>
+                <button class="btn btn-success" onclick="document.getElementById('send').submit()"><?=$lang->g('send', 'student-preview')?></button>
+                <button class="btn btn-primary disabled" data-toggle="tooltip" data-placement="top" title="<?=$lang->g('before-sent', 'student-preview')?>"><?=$lang->g('print', 'student-preview')?></button>
             </div>
         </div>
         <?php endif?>
     </div>
 </div>
-<h4>Předměty</h4>
+<h4><?=$lang->g('subjects', 'student-preview')?></h4>
 <table class="table table-hover table-condensed">
     <thead>
         <tr>
-            <th class="col-md-1">Kód</th>
-            <th class="col-md-6">Předmět</th>
-            <th class="col-md-5">Typ zápisu</th>
+            <th class="col-md-1"><?=$lang->g('table-code', 'student-preview')?></th>
+            <th class="col-md-6"><?=$lang->g('table-subject', 'student-preview')?></th>
+            <th class="col-md-5"><?=$lang->g('table-type', 'student-preview')?></th>
         </tr>
     </thead>
     <?php foreach($subjects as $subject):?>
     <tr>
         <td><?=$subject['code']?></td>
         <td><?=$subject['name']?></td>
-        <td><?=[
-            'Volitelný předmět',
-            'Náhradní předmět',
-            'Dobrovolný seminář'
-        ][$subject['level']]?></td>
+        <td><?=$lang->g('type-' . $subject['level'], 'student-preview')?></td>
     </tr>
     <?php endforeach;?>
 </table>
@@ -46,8 +42,3 @@
     <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
     <input type="hidden" name="_METHOD" value="PUT" />
 </form>
-
-<?php if ($state != 0):?>
-<iframe id="pdf" src="<?=$router->pathFor('subjects-student-generate', ['id' => $listID])?>" style="display: none;">
-</iframe>
-<?php endif;?>
