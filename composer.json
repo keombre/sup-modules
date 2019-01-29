@@ -3,6 +3,5 @@
     "description": "Allows registration and management of optional subjects.",
     "type": "module",
     "require": {
-        "tecnickcom/tcpdf": "6.2.26"
     }
 }

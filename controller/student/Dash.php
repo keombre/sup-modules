@@ -26,8 +26,11 @@ class Dash extends Controller
             }
         }
 
+        $limit = $this->db->get('versions', ['limit [Int]'], ['id' => $this->settings['active_version']])['limit'];
+
         $response = $this->sendResponse($request, $response, 'student/dash.phtml', [
-            'lists' => $listgroups
+            'lists' => $listgroups,
+            'limit' => $limit
         ]);
     }
 }
