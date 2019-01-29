@@ -88,9 +88,6 @@ class Accept extends Controller
         }
 
         $subjects = explode('-', base64_decode($uri));
-        if (count($subjects) != 20) {
-            return false;
-        }
 
         $subjects = filter_var_array($subjects, FILTER_VALIDATE_INT);
         foreach ($subjects as $subject) {
@@ -111,7 +108,7 @@ class Accept extends Controller
         $list = $this->db->get('main', '*', ['id' => $code['code'], 'version' => $this->settings['active_version']]);
 
         if (array_key_exists('user', $code)) {
-            $user = $this->container->factory->userFromID($list['user']);
+            $user = $this->container->factory->userFromID((int) $list['user']);
 
             if (!$user || $user->getUname() != $code['user']) {
                 return false;

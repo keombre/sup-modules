@@ -17,11 +17,11 @@ class Edit extends Controller
         if (\array_key_exists('id', $args)) {
             $this->listID = \filter_var($args['id'], \FILTER_SANITIZE_STRING);
 
-            if (!$this->db->has('main', ['id' => $this->listID])) {
+            if (!$this->db->has('main', ['id' => $this->listID, 'version' => $this->settings['active_version']])) {
                 return $this->redirectWithMessage($response, 'subjects-student', "error", ['Seznam nenalezen']); 
             }
 
-            if ($this->db->get('main', ['state'], ['id' => $this->listID])['state'] != 0) {
+            if ($this->db->get('main', ['state'], ['id' => $this->listID, 'version' => $this->settings['active_version']])['state'] != 0) {
                 return $response->withRedirect($this->container->router->pathFor('subjects-student-preview', ['id' => $this->listID]), 301);
             }
         }

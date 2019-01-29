@@ -13,6 +13,7 @@ class GeneratePDF extends Controller
 
         $listID = \filter_var($args['id'], \FILTER_SANITIZE_STRING);
         $userID = $this->container->auth->getUser()->getID();
+        $uname  = $this->container->auth->getUser()->getUName();
 
         if (!$this->db->has('main', [
             'id' => $listID,
@@ -26,6 +27,7 @@ class GeneratePDF extends Controller
         $subjects = $this->db->select('lists', [
             '[>]subjects' => ['subject' => 'id']
         ], [
+            'subjects.id',
             'subjects.code',
             'subjects.name',
             'lists.level'
@@ -34,12 +36,18 @@ class GeneratePDF extends Controller
             'lists.list' => $listID
         ]);
 
+        $qrURL = (string) $request
+                ->getUri()
+                ->withPath($this->container->router->pathFor("subjects-teacher-accept", ["id" => $listID]))
+                ->withQuery(http_build_query(['b' => base64_encode(implode('-', array_column($subjects, 'id')))]))
+                ->withFragment("");
+
         $subjects = \array_map(function ($e) {
             return [$e['code'], $e['name'], ['Volitelný předmět', 'Náhradní předmět', 'Dobrovolný seminář'][$e['level']]];
         }, $subjects);
 
         $generator = new \SUP\PDF\Generate($this->container, 'Volitelné předměty', '2019');
-        $generator->setContent('123 - 456', 'U12345-C123456', 'http://sup.localhost/bleble', $this->container->auth->getUser());
+        $generator->setContent(substr_replace($listID, ' - ', 3, 0), 'C' . $listID . '-U' . $uname, $qrURL, $this->container->auth->getUser());
         $generator->setData(['Kód', 'Předmět', 'Typ zápisu'], $subjects, [10, 50, 40]);
 
         return $generator->generate($response);
