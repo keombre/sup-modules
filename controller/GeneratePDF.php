@@ -51,13 +51,19 @@ abstract class GeneratePDF extends Controller
             return [
                 $e['code'],
                 $e['name'],
-                ['Volitelný předmět', 'Náhradní předmět', 'Dobrovolný seminář'][$e['level']]
+                $this->container->lang->g('type-' . $e['level'], 'pdf')
             ];
         }, $subjects);
 
-        $generator = new \SUP\PDF\Generate($this->container, 'Volitelné předměty', '2019');
+        $versionName = $this->db->get('versions', 'name', ['id' => $this->settings['active_version']]);
+
+        $generator = new \SUP\PDF\Generate($this->container, $this->container->lang->g('title', 'pdf'), $versionName);
         $generator->setContent(substr_replace($listID, ' - ', 3, 0), 'C' . $listID . '-U' . $user->getUName(), $qrURL, $user);
-        $generator->setData(['Kód', 'Předmět', 'Typ zápisu'], $subjects, [10, 50, 40]);
+        $generator->setData([
+            $this->container->lang->g('table-code', 'pdf'),
+            $this->container->lang->g('table-subject', 'pdf'),
+            $this->container->lang->g('table-type', 'pdf')
+        ], $subjects, [10, 50, 40]);
 
         return $generator->generate($response);
         
