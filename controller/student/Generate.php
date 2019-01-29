@@ -22,11 +22,15 @@ class Generate extends GeneratePDF
             return $this->notFound($response);
         }
 
+        $this->print = true;
+        
         return parent::__invoke($request, $response, $args);
     }
     
     protected function notFound(&$response)
     {
-        return $this->redirectWithMessage($response, 'subjects-student', "error", ['Seznam nenalezen']);
+        return $this->redirectWithMessage($response, 'subjects-student', "error", [
+            $this->container->lang->g('notfound', 'student-generate')
+        ]);
     }
 }

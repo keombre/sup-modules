@@ -8,6 +8,9 @@ use modules\subjects\controller\Controller;
 
 abstract class GeneratePDF extends Controller
 {
+
+    protected $print = false;
+
     public function __invoke(Request $request, Response $response, $args)
     {
 
@@ -64,6 +67,10 @@ abstract class GeneratePDF extends Controller
             $this->container->lang->g('table-subject', 'pdf'),
             $this->container->lang->g('table-type', 'pdf')
         ], $subjects, [10, 50, 40]);
+
+        if ($this->print) {
+            $generator->print();
+        }
 
         return $generator->generate($response);
         
