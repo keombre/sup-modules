@@ -5,7 +5,7 @@
         <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>">Zpět</a>
         <div class="pull-right btn-group">
             <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="Seznam již byl odeslán">Odeslat</button>
-            <button class="btn btn-primary" onclick="window.print()">Tisk</button>
+            <button class="btn btn-primary" onclick="document.getElementById('pdf').contentWindow.print()">Tisk</button>
         </div>
         <?php else:?>
         <a class="btn btn-default" href="<?=$router->pathFor('subjects-student-edit', ["id" => $listID])?>">Zpět</a>
@@ -46,3 +46,8 @@
     <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
     <input type="hidden" name="_METHOD" value="PUT" />
 </form>
+
+<?php if ($state != 0):?>
+<iframe id="pdf" src="<?=$router->pathFor('subjects-student-generate', ['id' => $listID])?>" style="display: none;">
+</iframe>
+<?php endif;?>
