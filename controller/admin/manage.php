@@ -46,14 +46,51 @@ class Manage extends Upload
             } elseif ($mode == 'limit') {
                 $limit = filter_var(@$data['limit'], \FILTER_VALIDATE_INT);
 
-                if (!$limit) {
+                if ($limit === false || $limit < 0) {
                     return $this->redirectWithMessage($response, 'subjects-admin-manage', "error", [
-                        $this->container->lang->g('error-field-missing', 'admin-manage', ['id' => $id])
+                        $this->container->lang->g('error-field-missing', 'admin-manage')
                     ], ["id" => $version]);
                 }
 
                 $this->db->update('versions', ['limit' => $limit], ['id' => $version]);
 
+                return $this->redirectWithMessage($response, 'subjects-admin-manage', "status", [
+                    $this->container->lang->g('success-saved', 'admin-manage')
+                ], ["id" => $version]);
+            } else if ($mode == 'close') {
+                $subject = filter_var(@$data['subject'], \FILTER_VALIDATE_INT);
+
+                if ($subject === false || !$this->db->has('subjects', [
+                    'id' => $subject,
+                    'version' => $version,
+                    'state' => 0
+                ])) {
+                    return $this->redirectWithMessage($response, 'subjects-admin-manage', "error", [
+                        $this->container->lang->g('error-subject-notfound', 'admin-manage')
+                    ], ["id" => $version]);
+                }
+
+                $this->db->update('subjects', ['state' => 1], ['id' => $subject]);
+                
+                return $this->redirectWithMessage($response, 'subjects-admin-manage', "status", [
+                    $this->container->lang->g('success-saved', 'admin-manage')
+                ], ["id" => $version]);
+
+            } else if ($mode == 'open') {
+                $subject = filter_var(@$data['subject'], \FILTER_VALIDATE_INT);
+
+                if (!$subject === false || !$this->db->has('subjects', [
+                    'id' => $subject,
+                    'version' => $version,
+                    'state' => 1
+                ])) {
+                    return $this->redirectWithMessage($response, 'subjects-admin-manage', "error", [
+                        $this->container->lang->g('error-subject-notfound', 'admin-manage')
+                    ], ["id" => $version]);
+                }
+
+                $this->db->update('subjects', ['state' => 0], ['id' => $subject]);
+                
                 return $this->redirectWithMessage($response, 'subjects-admin-manage', "status", [
                     $this->container->lang->g('success-saved', 'admin-manage')
                 ], ["id" => $version]);
@@ -69,7 +106,8 @@ class Manage extends Upload
             'id [Index]',
             'code [Int]',
             'name [String]',
-            'annotation [String]'
+            'annotation [String]',
+            'state [Int]'
         ], ["version" => $version]);
 
         $response = $this->sendResponse($request, $response, "admin/manage.phtml", [

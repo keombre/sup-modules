@@ -26,7 +26,8 @@
             "code": "INTEGER",
             "name": "TEXT",
             "annotation": "TEXT NULL",
-            "version": "INTEGER"
+            "version": "INTEGER",
+            "state": "INTEGER DEFAULT 0"
         },
         "main": {
             "id": "INTEGER PRIMARY KEY",

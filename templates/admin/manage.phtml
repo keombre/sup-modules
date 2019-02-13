@@ -36,7 +36,11 @@
         <ul class='list-group'>
         <?php foreach($subjects as $subject):?>
         <li class='list-group-item'>
-            <span style="width: 75%;display: inline-block;"><b><?=$subject['name']?></b></span>
+        <?php if($subject['state'] == 0):?>
+            <span style="width: 75%;display: inline-block;"><b><?=$subject['name']?></b><button onclick="sendClose(<?=$subject['id']?>)" class="pull-right btn btn-danger btn-xs"><?=$lang->g('subject-close', 'admin-manage')?></button></span>
+        <?php else:?>
+            <span style="width: 75%;display: inline-block;"><b><?=$subject['name']?></b><button onclick="sendOpen(<?=$subject['id']?>)" class="pull-right btn btn-success btn-xs"><?=$lang->g('subject-open', 'admin-manage')?></button></span>
+        <?php endif;?>
         </li>
         <?php endforeach;?>
         </ul>
@@ -75,7 +79,33 @@
 
 </div>
 
+<form method="post" action="<?=$router->pathFor('subjects-admin-manage', ["id" => $version], ['mode' => 'open'])?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <input type="hidden" name="subject" id="form-open">
+</form>
+
+<form method="post" action="<?=$router->pathFor('subjects-admin-manage', ["id" => $version], ['mode' => 'close'])?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <input type="hidden" name="subject" id="form-close">
+</form>
+
 <script>
+function sendOpen(id) {
+    var elm = document.getElementById('form-open')
+    elm.value = id
+    elm.parentNode.submit()
+}
+
+function sendClose(id) {
+    var elm = document.getElementById('form-close')
+    elm.value = id
+    elm.parentNode.submit()
+}
+
 $('#toggle-list').click(function(){
     $(this).text(function(i,old){
         return old == "<?=$lang->g('list-expand', 'admin-manage')?>" ? "<?=$lang->g('list-collapse', 'admin-manage')?>" : "<?=$lang->g('list-expand', 'admin-manage')?>";
