@@ -20,7 +20,13 @@ class View extends Controller
         ], 'state' => 2]) as $entry) {
             $students[] = [
                 'user' => $this->container->factory->userFromID($entry['user']),
-                'list' => $entry['id']
+                'list' => $entry['id'],
+                'invalid' => $this->db->has('lists', [
+                    '[>]subjects' => ['subject' => 'id']
+                ], [
+                    'lists.list' => $entry['id'],
+                    'subjects.state' => 1
+                ])
             ];
         }
 

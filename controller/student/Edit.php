@@ -33,7 +33,8 @@ class Edit extends Controller
             'name [String]',
             'annotation [String]'
         ], [
-            'version' => $this->settings['active_version']
+            'version' => $this->settings['active_version'],
+            'state' => 0
         ]);
 
         if ($request->isPut()) {
@@ -70,14 +71,14 @@ class Edit extends Controller
                         'level' => 1
                     ]);
                     break;
-                case 'option':
+                /*case 'option':
                     $this->cleanPrevious($subject);
                     $this->db->insert('lists', [
                         'list' => $listID,
                         'subject' => $subject,
                         'level' => 2
                     ]);
-                    break;
+                    break;*/
                 case 'cancel':
                     $this->cleanPrevious($subject);
                     if ($this->db->count('lists', [
