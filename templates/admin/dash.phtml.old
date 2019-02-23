@@ -1,0 +1,142 @@
+<div class="col-md-12">
+<h3><?=$lang->g('title', 'admin-dash')?> <small><?=$lang->g('heading', 'admin-dash')?></small></h3>
+<hr />
+</div>
+<div class="col-md-6">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('new-title', 'admin-dash')?></strong>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal"  enctype="multipart/form-data" method="post" action="<?=$router->pathFor('subjects-admin-create')?>">
+            <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+            <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+            <input type="hidden" name="_METHOD" value="PUT" />
+            <p><?=$lang->g('new-format', 'admin-dash')?>
+            <br />
+            <pre><?=$lang->g('csv-format', 'admin')?></pre>
+            </p>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="name"><?=$lang->g('new-name', 'admin-dash')?></label>
+                <div class="col-md-8">
+                    <input class="form-control" type="text" name="name" id="name" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="limit"><?=$lang->g('new-limit', 'admin-dash')?></label>
+                <div class="col-md-6">
+                    <input class="form-control" type="number" name="limit" placeholder="<?=$lang->g('new-limit-placeholder', 'admin-dash')?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="class"><?=$lang->g('new-list', 'admin-dash')?></label>
+                <div class="col-md-8">
+                    <input type="file" name="subjects"/><br />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <input class="btn btn-primary" type="submit" value="<?=$lang->g('new-submit', 'admin-dash')?>">
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('lists-title', 'admin-dash')?></strong>
+        <div class="pull-right">
+            <a href="#" id="toggle-list" data-toggle="collapse" data-target="#collapse-list"><?=$lang->g('lists-expand', 'admin-dash')?></a>
+        </div>
+    </div>
+    <?php if (is_array($versions) && count($versions)):?>
+    <div class="panel-body collapse" id="collapse-list">
+        <ul class='list-group'>
+        <?php foreach($versions as $version):?>
+        <li class='list-group-item'>
+            <a href="<?=$router->pathFor('subjects-admin-manage', ['id' => $version['id']])?>"><?=$version['name']?></a>
+        </li>
+        <?php endforeach;?>
+        </ul>
+    <?php else:?>
+    <div class="panel-body collapse in" id="collapse-list">
+        <span class='text-muted'><?=$lang->g('lists-empty', 'admin-dash')?></span>
+    <?php endif?>
+    </div>
+    </div>
+</div>
+<script>
+$('#toggle-list').click(function(){
+    $(this).text(function(i,old){
+        return old == "<?=$lang->g('lists-expand', 'admin-dash')?>" ? "<?=$lang->g('lists-collapse', 'admin-dash')?>" : "<?=$lang->g('lists-expand', 'admin-dash')?>";
+    });
+});
+</script>
+
+<div class="col-md-6">
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('export-title', 'admin-dash')?></strong>
+    </div>
+    <div class="panel-body text-center">
+        <?php if ($allowDownload):?>
+        <a class="btn btn-lg btn-success" href="<?=$router->pathFor('subjects-admin-download')?>" target="_blank"><?=$lang->g('export-download', 'admin-dash')?></a><br /><br />
+        <?php else:?>
+        <button class="btn btn-lg btn-success disabled"><?=$lang->g('export-download', 'admin-dash')?></button><br /><br />
+        <?php endif;?>
+    </div>
+    </div>
+
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <strong><?=$lang->g('settings-title', 'admin-dash')?></strong>
+    </div>
+    <div class="panel-body">
+    <form class="form-horizontal" method="post" action="<?=$router->pathFor('subjects-admin-settings')?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="active7"><?=$lang->g('settings-version7', 'admin-dash')?></label>
+            <div class="col-md-6">
+                <select class="form-control" name="active7" required>
+                    <option disabled selected value=""><?=$lang->g('settings-version-choose', 'admin-dash')?></option>
+                    <?php foreach ($versions as $version):?>
+                    <option value="<?=$version['id']?>" <?=@$settings['active_version_7'] == $version['id']?'selected':''?>><?=$version['name']?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="active8"><?=$lang->g('settings-version8', 'admin-dash')?></label>
+            <div class="col-md-6">
+                <select class="form-control" name="active8" required>
+                    <option disabled selected value=""><?=$lang->g('settings-version-choose', 'admin-dash')?></option>
+                    <?php foreach ($versions as $version):?>
+                    <option value="<?=$version['id']?>" <?=@$settings['active_version_8'] == $version['id']?'selected':''?>><?=$version['name']?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="edit"><?=$lang->g('settings-editing', 'admin-dash')?></label>
+            <div class="col-md-6">
+                <input type="checkbox" <?=@$settings['open_editing']?'checked':''?> name="edit" data-on="<?=$lang->g('settings-editing-open', 'admin-dash')?>" data-off="<?=$lang->g('settings-editing-closed', 'admin-dash')?>" data-onstyle="info" data-offstyle="danger" data-toggle="toggle">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-5 control-label" for="accept"><?=$lang->g('settings-accepting', 'admin-dash')?></label>
+            <div class="col-md-6">
+                <input type="checkbox" <?=@$settings['open_accepting']?'checked':''?> name="accept" data-on="<?=$lang->g('settings-accepting-open', 'admin-dash')?>" data-off="<?=$lang->g('settings-accepting-closed', 'admin-dash')?>" data-onstyle="info" data-offstyle="danger" data-toggle="toggle">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-7 col-md-offset-5">
+                <input class="btn btn-primary" type="submit" value="<?=$lang->g('settings-submit', 'admin-dash')?>">
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+</div>
