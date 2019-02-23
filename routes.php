@@ -48,9 +48,17 @@ class Routes
 
             // ------- admin -------
             $this->group('/admin', function () {
+
                 $this->get('', controller\admin\Dash::class)
                 ->setName('subjects-admin');
 
+                $this->get('/entries', controller\admin\entries\Dash::class)
+                ->setName('subjects-admin-entries-dash');
+
+                $this->map(['GET', 'PUT'], '/entries/{id}', controller\admin\entries\Edit::class)
+                ->setName('subjects-admin-entries-edit');
+
+                /*
                 $this->get('/download', controller\admin\Download::class)
                 ->setName('subjects-admin-download');
 
@@ -62,6 +70,8 @@ class Routes
 
                 $this->map(['GET', 'PUT'], '/manage/{id}', controller\admin\Manage::class)
                 ->setName('subjects-admin-manage');
+
+                */
             })->add(\middleware\auth\admin::class);
         })->add(\middleware\layout::class);
     }

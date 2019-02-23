@@ -3,6 +3,8 @@
 <h1 class="page-header">Seznam zápisů</h1>
 
 <div class="row">
+<h2 class="sub-header">3. ročník</h2>
+<?php if (is_array(@$entries3) && count($entries3)):?>
 <div class="table-responsive">
 <table class="table table-striped">
     <thead>
@@ -14,20 +16,47 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1,001</td>
-        <td>Pepík Nováků</td>
-        <td>4. B</td>
-        <td>5</td>
+    <?php foreach ($entries3 as $entry):?>
+    <tr <?=$entry['invalid'] > 0?'class="danger"':''?>>
+        <td><a href="<?=$router->pathFor('subjects-admin-entries-edit', ['id' => $entry['list']])?>"><?=$entry['list']?></a></td>
+        <td><?=$entry['user']->getName()?></td>
+        <td><?=$entry['user']->getAttribute('class')?></td>
+        <td><?=$entry['invalid']?></td>
     </tr>
-    <tr>
-        <td>1,002</td>
-        <td>amet</td>
-        <td>consectetur</td>
-        <td>adipiscing</td>
-    </tr>
+    <?php endforeach;?>
     </tbody>
 </table>
+<?php else:?>
+Žádné zápisy nenalezeny
+<?php endif;?>
+
+<h2 class="sub-header">4. ročník</h2>
+<?php if (is_array(@$entries4) && count($entries4)):?>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID zápisu</th>
+        <th>Jméno</th>
+        <th>Třída</th>
+        <th>Počet uzavřených předmětů</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($entries4 as $entry):?>
+    <tr <?=$entry['invalid'] > 0?'class="danger"':''?>>
+        <td><a href="<?=$router->pathFor('subjects-admin-entries-edit', ['id' => $entry['list']])?>"><?=$entry['list']?></a></td>
+        <td><?=$entry['user']->getName()?></td>
+        <td><?=$entry['user']->getAttribute('class')?></td>
+        <td><?=$entry['invalid']?></td>
+    </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+<?php else:?>
+Žádné zápisy nenalezeny
+<?php endif;?>
 </div>
 
-<?php require __dir__."/sidebar/footer.phtml"?>
+
+<?php require __dir__."/../sidebar/footer.phtml"?>

@@ -16,7 +16,8 @@ class Dash extends Controller
         $response = $this->sendResponse($request, $response, "admin/dash.phtml", [
             "versions" => $versions,
             "settings" => $this->db->get('settings', '*'),
-            "allowDownload" => $allowDownload
+            "allowDownload" => $allowDownload,
+            "sidebar_active" => "dash"
         ]);
     }
 }
