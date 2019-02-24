@@ -2,9 +2,46 @@
 
 <h1 class="page-header">Seznamy předmětů</h1>
 
-// aktivní verze pro 3. ročník
-// aktivní verze pro 4. ročník
 
-Založit nový seznam
+<form method="post" class="form-inline" action="<?=$router->pathFor('subjects-admin-subjects-edit', ['id' => 'new'])?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <div class="form-group">
+        <label for="name" style="margin-right: 5px;">Založit novou verzi</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Název">
+    </div>
+    <input type="submit" class="btn btn-default" value="Odelsat">
+</form>
 
-Seznamy: //tabulka
+<hr />
+
+<h2 class="sub-header">Seznamy předmětů</h2>
+<?php if (is_array(@$versions) && count($versions)):?>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID seznamu</th>
+        <th>Název</th>
+        <th>Počet předmětů</th>
+        <th>Limity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($versions as $entry):?>
+    <tr>
+        <td><a href="<?=$router->pathFor('subjects-admin-subjects-edit', ['id' => $entry['id']])?>"><?=$entry['id']?></a></td>
+        <td><?=$entry['name']?></td>
+        <td><?=$entry['count']?></td>
+        <td><?=$entry['limit']?>/<?=$entry['limit_spare']?></td>
+    </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+<?php else:?>
+Žádné seznamy nenalezeny
+<?php endif;?>
+</div>
+
+<?php require __dir__."/../sidebar/footer.phtml"?>

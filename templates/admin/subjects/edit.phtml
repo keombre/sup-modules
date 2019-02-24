@@ -1,0 +1,84 @@
+<?php require __dir__."/../sidebar/header.phtml"?>
+
+<h1 class="page-header">Nastavení seznamu předmětů<br /><small><?=$info['name']?></small></h1>
+
+<div class="row">
+<div class="col-sm-6">
+<h2 class="sub-header">Nahrát předměty</h2>
+
+<form method="post" enctype="multipart/form-data" action="<?=$router->pathFor('subjects-admin-subjects-upload', ["id" => $version])?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <div class="form-group col-sm-12">
+        <input type="file" name="subjects" />
+    </div>
+    <div class="col-sm-6">
+        <input type="submit" class="btn btn-default form-control" value="<?=$lang->g('new-submit', 'admin-manage')?>" />
+    </div>
+</form>
+</div>
+
+
+<div class="col-sm-6">
+    <h2 class="sub-header">Limity</h2>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data" action="<?=$router->pathFor('subjects-admin-subjects-edit', ["id" => $version])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="limit"><?=$lang->g('settings-limit', 'admin-manage')?></label>
+            <div class="col-md-5" style="padding: 0 5px">
+                <input class="form-control" type="text" name="limit" placeholder="<?=$lang->g('settings-limit-placeholder', 'admin-manage')?>" value="<?=$info['limit']?>" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="limit_spare"><?=$lang->g('settings-limit', 'admin-manage')?></label>
+            <div class="col-md-5" style="padding: 0 5px">
+                <input class="form-control" type="text" name="limit_spare" placeholder="<?=$lang->g('settings-limit-placeholder', 'admin-manage')?>" value="<?=$info['limit_spare']?>" required>
+            </div>
+        </div>
+        <div class="col-md-4 form-group">
+            <input type="submit" class="btn btn-default form-control" value="<?=$lang->g('settings-limit-submit', 'admin-manage')?>" />
+        </div>
+    </form>
+</div>
+</div>
+
+<hr />
+
+<h2 class="sub-header">Seznam předmětů</h2>
+<?php if (is_array(@$subjects) && count($subjects)):?>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID předmětu</th>
+        <th>Kód</th>
+        <th>Název</th>
+        <th>Anotace</th>
+        <th>Otevřen?</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($subjects as $entry):?>
+    <tr <?=$entry['state'] == 1 ? 'class="danger"' : ''?>>
+        <td><?=$entry['id']?></td>
+        <td><?=$entry['code']?></td>
+        <td><p class="ellipsis" style="max-width: 150px;"><?=$entry['name']?></p></td>
+        <td><p class="ellipsis" style="max-width: 250px;"><?=$entry['annotation']?></p></td>
+        <td><?=$entry['state'] == 1 ? 'Ne' : 'Ano'?></td>
+    </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+<?php else:?>
+Žádné předměty nenalezeny
+<?php endif;?>
+
+Seznam předmětů //rozbalovací tabulka, u každého upravit, smazat (dotázat)
+
+Přidat
+
+Uložit
+
+
+<?php require __dir__."/../sidebar/footer.phtml"?>

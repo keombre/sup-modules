@@ -52,11 +52,24 @@ class Routes
                 $this->get('', controller\admin\Dash::class)
                 ->setName('subjects-admin');
 
-                $this->get('/entries', controller\admin\entries\Dash::class)
-                ->setName('subjects-admin-entries-dash');
+                $this->group('/entries', function () {
+                    $this->get('', controller\admin\entries\Dash::class)
+                    ->setName('subjects-admin-entries-dash');
 
-                $this->map(['GET', 'PUT'], '/entries/{id}', controller\admin\entries\Edit::class)
-                ->setName('subjects-admin-entries-edit');
+                    $this->map(['GET', 'PUT'], '/{id}', controller\admin\entries\Edit::class)
+                    ->setName('subjects-admin-entries-edit');
+                });
+                
+                $this->group('/subjects', function () {
+                    $this->get('', controller\admin\subjects\Dash::class)
+                    ->setName('subjects-admin-subjects-dash');
+
+                    $this->map(['GET', 'PUT', 'POST'], '/{id}', controller\admin\subjects\Edit::class)
+                    ->setName('subjects-admin-subjects-edit');
+
+                    $this->post('/{id}/upload', controller\admin\subjects\Upload::class)
+                    ->setName('subjects-admin-subjects-upload');
+                });
 
                 /*
                 $this->get('/download', controller\admin\Download::class)

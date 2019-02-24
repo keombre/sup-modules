@@ -19,6 +19,7 @@
         "versions": {
             "id": "INTEGER PRIMARY KEY",
             "limit": "INTEGER",
+            "limit_spare": "INTEGER",
             "name": "TEXT"
         },
         "subjects": {

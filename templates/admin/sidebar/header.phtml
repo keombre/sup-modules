@@ -70,6 +70,12 @@
   margin-top: 0;
 }
 
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 </style>
 
 <div class="container-fluid" style="min-height: 300px;">
@@ -86,12 +92,12 @@
         <ul class="nav nav-sidebar">
         <li <?=$sidebar_active == 'dash' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin')?>">Přehled <span class="sr-only">(current)</span></a></li>
         <li <?=$sidebar_active == 'entries' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-entries-dash')?>">Seznam zápisů</a></li>
+        <li <?=$sidebar_active == 'closing' ? 'class="active"': ''?>><a href="#">Uzavírání předmětů</a></li>
         <li <?=$sidebar_active == 'export' ? 'class="active"': ''?>><a href="#">Export</a></li>
         </ul>
         <div class="nav-separator">Nastavení</div>
         <ul class="nav nav-sidebar">
-        <li <?=$sidebar_active == 'subjects' ? 'class="active"': ''?>><a href="">Seznamy předmětů</a></li>
-        <li <?=$sidebar_active == 'versions' ? 'class="active"': ''?>><a href="">Verze & Limity</a></li>
+        <li <?=$sidebar_active == 'subjects' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-subjects-dash')?>">Seznamy předmětů</a></li>
         <li <?=$sidebar_active == 'timers' ? 'class="active"': ''?>><a href="">Časovače</a></li>
         </ul>
     </div>
