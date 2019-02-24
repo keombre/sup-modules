@@ -10,7 +10,6 @@ class Settings extends Controller
 {
     public function __invoke(Request $request, Response $response, $args)
     {
-        $data = $request->getParsedBody();
         
         $edit = $this->sanitizePost($request, 'edit', FILTER_SANITIZE_STRING);
         $accept = $this->sanitizePost($request, 'accept', FILTER_SANITIZE_STRING);

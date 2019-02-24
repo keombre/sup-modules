@@ -1,0 +1,100 @@
+<?php require __dir__."/../sidebar/header.phtml"?>
+
+<h1 class="page-header">Uzavírání předmětů</h1>
+
+<h2 class="sub-header">3. ročník</h2>
+<?php if (is_array(@$entries3) && count($entries3)):?>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID předmětu</th>
+        <th>Kód</th>
+        <th>Název</th>
+        <th>Počet zápisů</th>
+        <th>Akce</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($entries3 as $entry):?>
+    <tr <?=$entry['state'] == 1 ? 'class="danger"' : ''?>>
+        <td><?=$entry['id']?></td>
+        <td><?=$entry['code']?></td>
+        <td><?=$entry['name']?></td>
+        <td><?=$entry['entries']?>/<?=$entry['entries_spare']?></td>
+<?php if ($entry['state'] == 0):?>
+        <td><button onclick="sendClose(<?=$entry['id']?>, <?=$version3?>)" class="btn btn-danger btn-xs">Uzavřít</button></td>
+<?php else:?>
+        <td><button onclick="sendOpen(<?=$entry['id']?>, <?=$version3?>)" class="btn btn-success btn-xs">Otevřít</button></td>
+<?php endif;?>
+    </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+</div>
+<?php else:?>
+Žádné předměty nenalezeny
+<?php endif;?>
+
+<h2 class="sub-header">4. ročník</h2>
+<?php if (is_array(@$entries4) && count($entries4)):?>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID předmětu</th>
+        <th>Kód</th>
+        <th>Název</th>
+        <th>Počet zápisů</th>
+        <th>Akce</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($entries4 as $entry):?>
+    <tr <?=$entry['state'] == 1 ? 'class="danger"' : ''?>>
+        <td><?=$entry['id']?></td>
+        <td><?=$entry['code']?></td>
+        <td><?=$entry['name']?></td>
+        <td><?=$entry['entries']?>/<?=$entry['entries_spare']?></td>
+<?php if ($entry['state'] == 0):?>
+        <td><button onclick="sendClose(<?=$entry['id']?>, <?=$version4?>)" class="btn btn-danger btn-xs">Uzavřít</button></td>
+<?php else:?>
+        <td><button onclick="sendOpen(<?=$entry['id']?>, <?=$version4?>)" class="btn btn-success btn-xs">Otevřít</button></td>
+<?php endif;?>
+    </tr>
+    <?php endforeach;?>
+    </tbody>
+</table>
+</div>
+<?php else:?>
+Žádné předměty nenalezeny
+<?php endif;?>
+
+<form method="post" action="<?=$router->pathFor('subjects-admin-stats-edit')?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" id="form-met" />
+    <input type="hidden" name="subject" id="form-sub">
+    <input type="hidden" name="version" id="form-ver">
+</form>
+
+<?php require __dir__."/../sidebar/footer.phtml"?>
+
+<script>
+function sendOpen(subject, version) {
+    document.getElementById('form-met').value = 'PUT'
+    send(subject, version)
+}
+
+function sendClose(subject, version) {
+    document.getElementById('form-met').value = 'DELETE'
+    send(subject, version)
+}
+
+function send(subject, version) {
+    document.getElementById('form-ver').value = version
+    var elm = document.getElementById('form-sub')
+    elm.value = subject
+    elm.parentNode.submit()
+}
+</script>

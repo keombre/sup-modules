@@ -71,6 +71,14 @@ class Routes
                     ->setName('subjects-admin-subjects-upload');
                 });
 
+                $this->group('/stats', function () {
+                    $this->get('', controller\admin\stats\Dash::class)
+                    ->setName('subjects-admin-stats-dash');
+
+                    $this->map(['PUT', 'DELETE'], '/edit', controller\admin\stats\Edit::class)
+                    ->setName('subjects-admin-stats-edit');
+                });
+
                 /*
                 $this->get('/download', controller\admin\Download::class)
                 ->setName('subjects-admin-download');
