@@ -79,6 +79,14 @@ class Routes
                     ->setName('subjects-admin-stats-edit');
                 });
 
+                $this->group('/export', function () {
+                    $this->get('', controller\admin\export\Dash::class)
+                    ->setName('subjects-admin-export-dash');
+
+                    $this->get('/download/{version}[/{type}]', controller\admin\export\Download::class)
+                    ->setName('subjects-admin-export-download');
+                });
+
                 /*
                 $this->get('/download', controller\admin\Download::class)
                 ->setName('subjects-admin-download');

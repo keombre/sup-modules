@@ -18,7 +18,7 @@
     <tr <?=$subject['state'] == 1 ?'class="danger"':''?>>
         <td><?=$subject['code']?></td>
         <td><?=$subject['name']?></td>
-        <td><?=$subject['level']?></td>
+        <td><?=$subject['level'] == 0 ? 'Volitelný' : 'Náhradní'?></td>
         <td><?=$subject['state'] == 1 ? 'ne' : 'ano'?></td>
     </tr>
     <?php endforeach;?>

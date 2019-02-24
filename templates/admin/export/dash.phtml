@@ -2,6 +2,26 @@
 
 <h1 class="page-header">Export</h1>
 
-tisk třídnické tabulky
+<?php if (is_array(@$versions) && count($versions)):?>
+<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Zvolte verzi
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <?php if(count($versions['active'])):?>
+      <li class="dropdown-header">Aktuální verze</li>
+      <?php foreach ($versions['active'] as $version):?>
+      <li><a href="<?=$router->pathFor('subjects-admin-export-download', ['version' => $version['id']])?>"><?=$version['name']?></a></li>
+      <?php endforeach;?>
+      <li class="divider"></li>
+      <?php endif;?>
+      <?php if(count($versions['other'])):?>
+      <li class="dropdown-header">Ostatní verze</li>
+      <?php foreach ($versions['other'] as $version):?>
+      <li><a href="<?=$router->pathFor('subjects-admin-export-download', ['version' => $version['id']])?>"><?=$version['name']?></a></li>
+      <?php endforeach;?>
+      <?php endif;?>
+    </ul>
+</div>
+<?php endif;?>
 
-stažení zápisů (formát xlsx)
+<?php require __dir__."/../sidebar/footer.phtml"?>

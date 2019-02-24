@@ -93,7 +93,7 @@
         <li <?=$sidebar_active == 'dash' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin')?>">Přehled <span class="sr-only">(current)</span></a></li>
         <li <?=$sidebar_active == 'entries' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-entries-dash')?>">Seznam zápisů</a></li>
         <li <?=$sidebar_active == 'stats' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-stats-dash')?>">Uzavírání předmětů</a></li>
-        <li <?=$sidebar_active == 'export' ? 'class="active"': ''?>><a href="#">Export</a></li>
+        <li <?=$sidebar_active == 'export' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-export-dash')?>">Export</a></li>
         </ul>
         <div class="nav-separator">Nastavení</div>
         <ul class="nav nav-sidebar">

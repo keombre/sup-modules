@@ -53,9 +53,19 @@ class Dash extends Controller
         ]);
 
         foreach ($entries as $id => $entry) {
+            $info = $this->db->select('lists', [
+                '[>]main' => ['list' => 'id']
+            ], 'main.id', [
+                'lists.subject' => $entry['id'],
+                'main.state' => 2,
+                'main.version' => $this->settings['active_version_' . $year],
+                'lists.level' => 0
+            ]);
+
+
             $entries[$id]['entries'] = $this->db->count('lists', [
                 '[>]main' => ['list' => 'id']
-            ], 'lists.list', [
+            ], 'main.id', [
                 'lists.subject' => $entry['id'],
                 'main.state' => 2,
                 'main.version' => $this->settings['active_version_' . $year],
