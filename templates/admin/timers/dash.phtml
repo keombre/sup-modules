@@ -2,6 +2,56 @@
 
 <h1 class="page-header">Časovače</h1>
 
-Otevřít/Uzavřít 1/2 kolo pro 3/4 ročník
+<form method="post" action="<?=$router->pathFor('subjects-admin-timers-edit')?>">
+<input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+<input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+<input type="hidden" name="_METHOD" value="PUT" />
+<h2 class="sub-header">3. ročník</h2>
+  <div class="form-group">
+    <label for="email">Otevřít 1. kolo</label>
+    <input type="time" name="time[3][1][open][time]" value="<?=$time[3][1]['open']['time']?>" class="form-control">
+    <input type="date" name="time[3][1][open][date]" value="<?=$time[3][1]['open']['date']?>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Uzavřít 1. kolo</label>
+    <input type="time" name="time[3][1][close][time]" value="<?=$time[3][1]['close']['time']?>" class="form-control">
+    <input type="date" name="time[3][1][close][date]" value="<?=$time[3][1]['close']['date']?>" class="form-control">
+  </div>
 
-uložit
+  <div class="form-group">
+    <label for="email">Otevřít 2. kolo</label>
+    <input type="time" name="time[3][2][open][time]" value="<?=$time[3][2]['open']['time']?>" class="form-control">
+    <input type="date" name="time[3][2][open][date]" value="<?=$time[3][2]['open']['date']?>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Uzavřít 2. kolo</label>
+    <input type="time" name="time[3][2][close][time]" value="<?=$time[3][2]['close']['time']?>" class="form-control">
+    <input type="date" name="time[3][2][close][date]" value="<?=$time[3][2]['close']['date']?>" class="form-control">
+  </div>
+
+<h2 class="sub-header">4. ročník</h2>
+  <div class="form-group">
+    <label for="email">Otevřít 1. kolo</label>
+    <input type="time" name="time[4][1][open][time]" value="<?=$time[4][1]['open']['time']?>" class="form-control">
+    <input type="date" name="time[4][1][open][date]" value="<?=$time[4][1]['open']['date']?>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Uzavřít 1. kolo</label>
+    <input type="time" name="time[4][1][close][time]" value="<?=$time[4][1]['close']['time']?>" class="form-control">
+    <input type="date" name="time[4][1][close][date]" value="<?=$time[4][1]['close']['date']?>" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Otevřít 2. kolo</label>
+    <input type="time" name="time[4][2][open][time]" value="<?=$time[4][2]['open']['time']?>" class="form-control">
+    <input type="date" name="time[4][2][open][date]" value="<?=$time[4][2]['open']['date']?>" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="pwd">Uzavřít 2. kolo</label>
+    <input type="time" name="time[4][2][close][time]" value="<?=$time[4][2]['close']['time']?>" class="form-control">
+    <input type="date" name="time[4][2][close][date]" value="<?=$time[4][2]['close']['date']?>" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-default">Uložit</button>
+</form>
+
+<?php require __dir__."/../sidebar/footer.phtml"?>

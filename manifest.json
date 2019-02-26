@@ -20,7 +20,9 @@
             "id": "INTEGER PRIMARY KEY",
             "limit": "INTEGER",
             "limit_spare": "INTEGER",
-            "name": "TEXT"
+            "name": "TEXT",
+            "timer1": "TEXT",
+            "timer2": "TEXT"
         },
         "subjects": {
             "id": "INTEGER PRIMARY KEY",

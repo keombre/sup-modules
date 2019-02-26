@@ -3,5 +3,6 @@
     "description": "Allows registration and management of optional subjects.",
     "type": "module",
     "require": {
+        "lezhnev74/pasvl": "0.5.6"
     }
 }

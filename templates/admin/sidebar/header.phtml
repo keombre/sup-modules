@@ -98,7 +98,7 @@
         <div class="nav-separator">Nastavení</div>
         <ul class="nav nav-sidebar">
         <li <?=$sidebar_active == 'subjects' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-subjects-dash')?>">Seznamy předmětů</a></li>
-        <li <?=$sidebar_active == 'timers' ? 'class="active"': ''?>><a href="">Časovače</a></li>
+        <li <?=$sidebar_active == 'timers' ? 'class="active"': ''?>><a href="<?=$router->pathFor('subjects-admin-timers-dash')?>">Časovače</a></li>
         </ul>
     </div>
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

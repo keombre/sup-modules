@@ -87,6 +87,15 @@ class Routes
                     ->setName('subjects-admin-export-download');
                 });
 
+                $this->group('/timers', function () {
+                    $this->get('', controller\admin\timers\Dash::class)
+                    ->setName('subjects-admin-timers-dash');
+
+                    $this->put('/edit', controller\admin\timers\Edit::class)
+                    ->setName('subjects-admin-timers-edit');
+
+                });
+
                 /*
                 $this->get('/download', controller\admin\Download::class)
                 ->setName('subjects-admin-download');
