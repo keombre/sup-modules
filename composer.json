@@ -3,7 +3,5 @@
     "description": "Allows creation, printing and managment of graduation kanons.",
     "type": "module",
     "require": {
-        "picqer/php-barcode-generator": "0.2.2",
-        "chillerlan/php-qrcode": "3.0"
     }
 }
