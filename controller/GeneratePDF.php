@@ -64,7 +64,7 @@ abstract class GeneratePDF extends Controller
         $versionName = $this->db->get('versions', 'name', ['id' => $listInfo['version']]);
 
         $generator = new \SUP\PDF\Generate($this->container, $this->container->lang->g('title', 'pdf'), $versionName);
-        $generator->setContent(substr_replace($listID, ' - ', 3, 0), 'C' . $listID . '-U' . $user->getUName(), $qrURL, $user);
+        $generator->setContent(substr_replace($listID, ' - ', 3, 0), $listID, $qrURL, $user);
         $generator->setData([
             $this->container->lang->g('table-code', 'pdf'),
             $this->container->lang->g('table-subject', 'pdf'),

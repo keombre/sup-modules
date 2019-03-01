@@ -16,7 +16,7 @@ class Generate extends GeneratePDF
         if (!$this->db->has('main', [
             'id' => $listID,
             'version' => $this->settings['active_version'],
-            'state[!]' => 0,
+            'state' => 2,
             'user' => $this->container->auth->getUser()->getID()
         ])) {
             return $this->notFound($response);

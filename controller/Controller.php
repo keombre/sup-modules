@@ -19,7 +19,7 @@ abstract class Controller extends \SUP\Controller
             'open_accepting'
         ]);
         $year = $this->container->auth->getUser()->getAttribute('year');
-        $year = (!\is_numeric($year) || ($year != 7 && $year != 8)) ? null : $year;
+        $year = (!\is_numeric($year) || ($year != 6 && $year != 7)) ? null : $year + 1;
 
         $this->settings = [
             'open_editing' => \is_null($year) ? false : $settings['open_editing'],

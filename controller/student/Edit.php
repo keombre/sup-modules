@@ -63,22 +63,24 @@ class Edit extends Controller
                         'level' => 0
                     ]);
                     break;
-                case 'spare':
+                case 'spare1':
                     $this->cleanPrevious($subject);
+                    $this->cleanSpare(1);
                     $this->db->insert('lists', [
                         'list' => $listID,
                         'subject' => $subject,
                         'level' => 1
                     ]);
                     break;
-                /*case 'option':
+                case 'spare2':
                     $this->cleanPrevious($subject);
+                    $this->cleanSpare(2);
                     $this->db->insert('lists', [
                         'list' => $listID,
                         'subject' => $subject,
                         'level' => 2
                     ]);
-                    break;*/
+                    break;
                 case 'cancel':
                     $this->cleanPrevious($subject);
                     if ($this->db->count('lists', [
@@ -124,7 +126,7 @@ class Edit extends Controller
 
             if (($selected[$id]['level'] ?? false) === 0) {
                 $selectedCount++;
-            } else if (($selected[$id]['level'] ?? false) === 1) {
+            } else if (($selected[$id]['level'] ?? false) >= 1) {
                 $spareCount++;
             }
         }
@@ -152,6 +154,14 @@ class Edit extends Controller
         $this->db->delete('lists', [
             'list' => $this->listID,
             'subject' => $subject
+        ]);
+    }
+
+    private function cleanSpare(int $type)
+    {
+        $this->db->delete('lists', [
+            'list' => $this->listID,
+            'level' => $type
         ]);
     }
 

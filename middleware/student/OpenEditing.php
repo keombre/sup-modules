@@ -15,7 +15,10 @@ class OpenEditing extends Middleware
         if ($user->canBecome(ROLE_TEACHER) || $user->canBecome(ROLE_ADMIN)) {
             return $next($request, $response);
 
-        } else if ($this->container->db->get("settings", "open_editing [Int]") != 1) {
+        } else if (
+            $this->container->auth->getUser()->getAttribute('year') != 7 &&
+            $this->container->auth->getUser()->getAttribute('year') != 6
+        ) {
             $response->getBody()->write($this->container->lang->g('denied', 'student-dash'));
             return $response;
         } else {

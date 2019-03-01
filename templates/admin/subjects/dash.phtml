@@ -2,7 +2,6 @@
 
 <h1 class="page-header">Seznamy předmětů</h1>
 
-
 <form method="post" class="form-inline" action="<?=$router->pathFor('subjects-admin-subjects-edit', ['id' => 'new'])?>">
     <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
     <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
@@ -16,7 +15,34 @@
 
 <hr />
 
-<h2 class="sub-header">Seznamy předmětů</h2>
+<form method="post" class="form-inline" action="<?=$router->pathFor('subjects-admin-subjects-dash')?>">
+    <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name'] ?>">
+    <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value'] ?>">
+    <input type="hidden" name="_METHOD" value="PUT" />
+    <div class="form-group">
+        <label for="v7" style="margin-right: 5px;">Verze pro 7. ročník</label>
+        <select class="form-control" name="v7" required>
+            <option disabled selected value="">Zvolte verzi</option>
+            <?php foreach ($versions as $version):?>
+            <option value="<?=$version['id']?>" <?=@$active_versions[7] == $version['id']?'selected':''?>><?=$version['name']?></option>
+            <?php endforeach;?>
+        </select>
+    </div><br /><br />
+    <div class="form-group">
+        <label for="v7" style="margin-right: 5px;">Verze pro 8. ročník</label>
+        <select class="form-control" name="v8" required>
+            <option disabled selected value="">Zvolte verzi</option>
+            <?php foreach ($versions as $version):?>
+            <option value="<?=$version['id']?>" <?=@$active_versions[8] == $version['id']?'selected':''?>><?=$version['name']?></option>
+            <?php endforeach;?>
+        </select>
+    </div><br />
+    <input type="submit" class="btn btn-default" value="Odelsat">
+</form>
+
+<hr />
+
+<h2 class="sub-header">Seznamy verzí</h2>
 <?php if (is_array(@$versions) && count($versions)):?>
 <div class="table-responsive">
 <table class="table table-striped">

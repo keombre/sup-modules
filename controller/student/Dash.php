@@ -10,7 +10,7 @@ class Dash extends Controller
 {
     public function __invoke(Request $request, Response $response, $args)
     {
-        $listgroups = $this->db->select('main', [
+        $list = $this->db->get('main', [
             'id [Index]',
             'created [Int]',
             'state [Int]',
@@ -20,16 +20,16 @@ class Dash extends Controller
             'version' => $this->settings['active_version']
         ]);
 
-        foreach ($listgroups as $id => $list) {
-            if ($listgroups[$id]['state'] == 2) {
-                $listgroups[$id]['accepted_by'] = $this->container->factory->userFromID($listgroups[$id]['accepted_by']);
+        if ($list) {
+            if ($list['state'] == 2) {
+                $list['accepted_by'] = $this->container->factory->userFromID($list['accepted_by']);
             }
         }
 
         $limit = $this->db->get('versions', ['limit [Int]'], ['id' => $this->settings['active_version']])['limit'];
 
         $response = $this->sendResponse($request, $response, 'student/dash.phtml', [
-            'lists' => $listgroups,
+            'list' => $list,
             'limit' => $limit
         ]);
     }

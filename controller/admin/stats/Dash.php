@@ -10,23 +10,51 @@ class Dash extends Controller
 {
     public function __invoke(Request $request, Response $response, $args)
     {
-        
-        $entries3 = $this->getEntries(7);
-        $entries4 = $this->getEntries(8);
+        if ($request->isGet()) {
+            $entries3 = $this->getEntries(7);
+            $entries4 = $this->getEntries(8);
 
-        $this->entrySort($entries3);
-        $this->entrySort($entries4);
+            $this->entrySort($entries3);
+            $this->entrySort($entries4);
 
-        $version3 = $this->settings['active_version_7'];
-        $version4 = $this->settings['active_version_8'];
+            $version3 = $this->settings['active_version_7'];
+            $version4 = $this->settings['active_version_8'];
 
-        $response = $this->sendResponse($request, $response, "admin/stats/dash.phtml", [
-            "entries3" => $entries3,
-            "entries4" => $entries4,
-            "version3" => $version3,
-            "version4" => $version4,
-            "sidebar_active" => "stats"
-        ]);
+            $response = $this->sendResponse($request, $response, "admin/stats/dash.phtml", [
+                "entries3" => $entries3,
+                "entries4" => $entries4,
+                "version3" => $version3,
+                "version4" => $version4,
+                "sidebar_active" => "stats"
+            ]);
+        } else if ($request->isPut()) {
+            $entries = [];
+            foreach ($this->db->select('main', [
+                'id [Index]',
+            ], [
+                'version' => [
+                    $this->settings['active_version_7'],
+                    $this->settings['active_version_8']
+                ],
+                'state[!]' => 0
+            ]) as $entry) {
+                if ($this->db->has('lists', [
+                    '[>]subjects' => ['subject' => 'id']
+                ], [
+                    'lists.list' => $entry['id'],
+                    'subjects.state' => 1
+                ])) {
+                    $this->db->update('main', [
+                        'state' => 3
+                    ], [
+                        'id' => $entry['id']
+                    ]);
+                }
+            }
+            return $this->redirectWithMessage($response, 'subjects-admin-stats-dash', "status", [
+                'Zápisy přepočítány'
+            ]);
+        }
 
         return $response;
     }

@@ -43,8 +43,8 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'enrol');" class="btn <?=$subject['level'] === 0?'disabled':''?>"><?=$lang->g('enrol', 'student-edit')?></a></li>
-                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'spare');" class="btn <?=$subject['level'] === 1?'disabled':''?>"><?=$lang->g('spare', 'student-edit')?></a></li>
-                        <?php /*<li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'option');" class="btn <?=$subject['level'] === 2?'disabled':''?>"><?=$lang->g('optional', 'student-edit')?></a></li>*/ ?>
+                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'spare1');" class="btn <?=$subject['level'] === 1?'disabled':''?>"><?=$lang->g('spare1', 'student-edit')?></a></li>
+                        <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'spare2');" class="btn <?=$subject['level'] === 2?'disabled':''?>"><?=$lang->g('spare2', 'student-edit')?></a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#" onclick="return send(this, '<?=$subject['id']?>', 'cancel');" class="btn <?=$subject['level'] === false?'disabled':''?>"><?=$lang->g('cancel', 'student-edit')?></a></li>
                     </ul>

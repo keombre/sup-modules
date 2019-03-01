@@ -1,18 +1,30 @@
 <div class="panel panel-default">
     <div class="panel-body">
+        <div class="col-sm-9">
         <p><?=$lang->g('heading', 'student-preview')?></p>
-        <?php if ($state != 0):?>
-        <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>"><?=$lang->g('back', 'student-preview')?></a>
-        <div class="pull-right btn-group">
-            <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="<?=$lang->g('already-sent', 'student-preview')?>"><?=$lang->g('send', 'student-preview')?></button>
-            <a href="<?=$router->pathFor('subjects-student-generate', ['id' => $listID])?>" target="_blank" class="btn btn-primary"><?=$lang->g('print', 'student-preview')?></a>
         </div>
-        <?php else:?>
-        <a class="btn btn-default" href="<?=$router->pathFor('subjects-student-edit', ["id" => $listID])?>"><?=$lang->g('back', 'student-preview')?></a>
-        <div class="pull-right">
-            <div class="btn-group">
+        <?php if ($state == 2):?>
+        <div class="col-sm-3">
+            <div class="pull-right btn-group">
+                <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="<?=$lang->g('already-sent', 'student-preview')?>"><?=$lang->g('send', 'student-preview')?></button>
+                <a href="<?=$router->pathFor('subjects-student-generate', ['id' => $listID])?>" target="_blank" class="btn btn-primary"><?=$lang->g('print', 'student-preview')?></a>
+                <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>"><?=$lang->g('back', 'student-preview')?></a>
+            </div>
+        </div>
+        <?php elseif ($state == 1):?>
+        <div class="col-sm-3">
+            <div class="pull-right btn-group">
+                <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="<?=$lang->g('already-sent', 'student-preview')?>"><?=$lang->g('send', 'student-preview')?></button>
+                <button class="btn btn-primary disabled"><?=$lang->g('print', 'student-preview')?></button>
+                <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>"><?=$lang->g('back', 'student-preview')?></a>
+            </div>
+        </div>
+        <?php elseif ($state == 0):?>
+        <div class="col-sm-3">
+            <div class="btn-group pull-right">
                 <button class="btn btn-success" onclick="document.getElementById('send').submit()"><?=$lang->g('send', 'student-preview')?></button>
                 <button class="btn btn-primary disabled" data-toggle="tooltip" data-placement="top" title="<?=$lang->g('before-sent', 'student-preview')?>"><?=$lang->g('print', 'student-preview')?></button>
+                <a class="btn btn-default" href="<?=$router->pathFor('subjects-student-edit', ["id" => $listID])?>"><?=$lang->g('back', 'student-preview')?></a>
             </div>
         </div>
         <?php endif?>

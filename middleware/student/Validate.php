@@ -41,7 +41,7 @@ class Validate extends Middleware
         foreach ($selected as $id => $subject) {
             if (($subject['level'] ?? false) === 0) {
                 $selectedCount++;
-            } else if (($subject['level'] ?? false) === 1) {
+            } else if (($subject['level'] ?? false) >= 1) {
                 $spareCount++;
             }
         }

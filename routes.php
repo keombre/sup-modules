@@ -61,7 +61,7 @@ class Routes
                 });
                 
                 $this->group('/subjects', function () {
-                    $this->get('', controller\admin\subjects\Dash::class)
+                    $this->map(['GET', 'PUT'], '', controller\admin\subjects\Dash::class)
                     ->setName('subjects-admin-subjects-dash');
 
                     $this->map(['GET', 'PUT', 'POST'], '/{id}', controller\admin\subjects\Edit::class)
@@ -72,7 +72,7 @@ class Routes
                 });
 
                 $this->group('/stats', function () {
-                    $this->get('', controller\admin\stats\Dash::class)
+                    $this->map(['GET', 'PUT'], '', controller\admin\stats\Dash::class)
                     ->setName('subjects-admin-stats-dash');
 
                     $this->map(['PUT', 'DELETE'], '/edit', controller\admin\stats\Edit::class)
