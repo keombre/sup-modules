@@ -41,6 +41,7 @@ class preview extends lists {
             ], ['lists.list' => $this->listID, 'ORDER' => 'books.id'])
         ];
 
+        /*
         $qrURL = (string) $request
                 ->getUri()
                 ->withPath($this->container->router->pathFor("lists-teacher-accept", ["id" => $this->formatBarcode($list)]))
@@ -49,14 +50,14 @@ class preview extends lists {
         
         $qrcode = (new \chillerlan\QRCode\QRCode(new \chillerlan\QRCode\QROptions([
             'outputType' => \chillerlan\QRCode\QRCode::OUTPUT_IMAGE_PNG,
-        ])))->render($qrURL);
+        ])))->render($qrURL);*/
         
-        $generatorPNG = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $barcode = base64_encode($generatorPNG->getBarcode($this->formatBarcode($list), $generatorPNG::TYPE_CODE_39E, 1.5));
+        //$generatorPNG = new \Picqer\Barcode\BarcodeGeneratorPNG();
+        //$barcode = base64_encode($generatorPNG->getBarcode($this->formatBarcode($list), $generatorPNG::TYPE_CODE_39E, 1.5));
 
         $this->sendResponse($request, $response, "preview.phtml", [
-            "barcode" => $barcode,
-            "qrcode" => $qrcode,
+            /*"barcode" => $barcode,
+            "qrcode" => $qrcode,*/
             "versionName" => $versionName,
             "list" => $list
         ]);

@@ -5,7 +5,7 @@
         <a class="btn btn-default" href="<?=$router->pathFor('lists')?>">Zpět</a>
         <div class="pull-right btn-group">
             <button class="btn btn-success disabled" data-toggle="tooltip" data-placement="top" title="Kánon již byl odeslán">Odeslat</button>
-            <button class="btn btn-primary" onclick="window.print()">Tisk</button>
+            <a href="<?=$router->pathFor('lists-generate', ['id' => $list['id']])?>" class="btn btn-primary" target="_blank">Tisk</a>
         </div>
         <?php else:?>
         <a class="btn btn-default" href="<?=$router->pathFor('lists-edit', ["id" => $list['id']])?>">Zpět</a>
@@ -23,23 +23,6 @@
         <?php endif?>
     </div>
 </div>
-<div class="print">
-<div class="only-print">
-<div class="footnote"><?=date("d. m. Y")?> – <b>SUPi</b> v<?=$config['version']?></div>
-<img class="pull-right" src="data:image/png;base64,<?=$barcode?>">
-<h3 style="margin-top: 4mm;">Kánon <?=$versionName?></h3>
-<table>
-    <tr>
-        <td>Jméno:&nbsp;&nbsp;</td>
-        <td><strong><?=$list['user']->getName()?></strong></td>
-    </tr>
-    <tr>
-        <td>Třída: </td>
-        <td><strong><?=$list['user']->getAttribute('class')?></strong></td>
-    </tr>
-</table>
-<br />
-</div>
 <h4>Knihy</h4>
 <table class="table table-hover table-condensed">
     <thead>
@@ -55,12 +38,4 @@
     </tr>
     <?php endforeach;?>
 </table>
-<div class="only-print">
-    <div class="signature"><h5>Podpis</h5></div>
-    <div class="qr-code pull-right">
-        <img src="<?=$qrcode?>"><br />
-        <span style="text-align: center"><?=substr_replace($list['id'], '-', 3, 0)?></span>
-    </div>
-</div>
-</div>
 </div>

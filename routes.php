@@ -22,6 +22,9 @@ class routes {
 
                 $this->map(['GET', 'PUT'], '/preview/{id}', controller\preview::class)
                 ->setName('lists-preview');
+
+                $this->get('/generate/{id}', controller\student\generate::class)
+                ->setName('lists-generate');
             })
             ->add(middleware\listID::class)
             ->add(middleware\open_editing::class);
@@ -32,8 +35,11 @@ class routes {
                 ->setName('lists-teacher-accept')
                 ->add(middleware\open_accepting::class);
 
-                $this->get('/view[/{id}]', controller\teacher\view::class)
+                $this->get('/view', controller\teacher\view::class)
                 ->setName('lists-teacher-view');
+
+                $this->get('/generate/{id}', controller\teacher\generate::class)
+                ->setName('lists-teacher-generate');
             })
             ->add(\middleware\auth\teacher::class);
 
