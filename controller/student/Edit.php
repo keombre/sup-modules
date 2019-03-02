@@ -32,6 +32,12 @@ class Edit extends Controller
             return $response->withRedirect($this->container->router->pathFor('subjects-student-preview', ['id' => $this->listID]), 301);
         }
 
+        if (!$this->checkTime($state)) {
+            return $this->redirectWithMessage($response, 'subjects-student', "error", [
+                'Nemáte přístup k úpravám'
+            ]);
+        }
+
         $subjects = $this->db->select('subjects', [
             'id [Index]',
             'name [String]',
@@ -144,6 +150,33 @@ class Edit extends Controller
             "subjects" => $subjects,
             "listID" => $this->listID
         ]);
+    }
+
+    private function checkTime($state) {
+        $limit = $this->db->get('versions', ['timer1 [JSON]', 'timer2 [JSON]'], ['id' => $this->settings['active_version']]);
+
+        $times = [
+            1 => [
+                'open' => strtotime(implode(' ', $limit['timer1']['open'])),
+                'close' => strtotime(implode(' ', $limit['timer1']['close'])),
+            ],
+            2 => [
+                'open' => strtotime(implode(' ', $limit['timer2']['open'])),
+                'close' => strtotime(implode(' ', $limit['timer2']['close'])),
+            ]
+        ];
+
+        if ($times[1]['open'] > time()) {
+            return false;
+        } else if ($times[1]['close'] > time() && $state == 0) {
+            return true;
+        } else if ($times[2]['open'] > time()) {
+            return false;
+        } else if ($times[2]['close'] > time() && $state == 3) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function invalidRequest($response)

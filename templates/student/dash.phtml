@@ -1,9 +1,14 @@
 <h3><?=$lang->g('title', 'student-dash')?></h3>
 <hr />
 <p>
-<?=$lang->g('longText', 'student-dash', ['count' => $limit, 'hours' => $limit * 2])?>
+<?=$lang->g('longText', 'student-dash', [
+    'count' => $limit['limit'],
+    'hours' => $limit['limit'] * 2,
+    'date_close_1' => $limit['timer1']['close']['date'] . ' ' . $limit['timer1']['close']['time']
+])?>
 </p>
 
+<?php if ($action_type != 0):?>
 <?php if (is_array($list) && count($list)):?>
     Stav zápisu: 
 
@@ -14,10 +19,10 @@
     <?php elseif ($list['state'] == 2):?>
         <span style='margin-top: 2px;' class='label label-success'><?=$lang->g('list-state-accepted', 'student-dash')?></span>
     <?php elseif ($list['state'] == 3):?>
-        <?=$lang->g('list-state-invalid', 'student-dash')?>
+            <?=$lang->g('list-state-invalid', 'student-dash')?>
     <?php endif;?>
 
-    <?php if ($list['state'] == 0 || $list['state'] == 3):?>
+    <?php if (($list['state'] == 0 || $list['state'] == 3) && ($action_type == 1 || $action_type == 3)):?>
         <a href='<?=$router->pathFor('subjects-student-edit')?>'>Přejít k úpravě</a>
     <?php elseif ($list['state'] == 1 || $list['state'] == 2):?>
         <a href='<?=$router->pathFor('subjects-student-preview', ['id' => $list['id']])?>'>Zobrazit zápis</a>
@@ -26,4 +31,20 @@
 <?php else:?>
     <span class='text-muted'><?=$lang->g('list-empty', 'student-dash')?></span>
     <a href="<?=$router->pathFor('subjects-student-edit');?>"><span class="glyphicon glyphicon-plus"></span> <?=$lang->g('list-new', 'student-dash')?></a>
-<?php endif?>
+<?php endif;?>
+<?php endif;?>
+<br />
+<br />
+Aktuálně probíhá <?=
+[
+    'Příprava na otevření zápisů',
+    '1. kolo zápisů',
+    'vypisování předmětů',
+    '2. kolo zápisů',
+    'úklid po zápisech'
+][$action_type]
+?>
+<br />
+Od <?=$date_since['date']?> <?=$date_since['time']?>
+<br />
+Do <?=$date_to['date']?> <?=$date_to['time']?>
