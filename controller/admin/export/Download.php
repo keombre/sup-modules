@@ -44,7 +44,7 @@ class Download extends Controller {
             'user [Int]'
         ], [
             'version' => $version,
-            'state[!]' => 0
+            'state' => 2
         ]) as $entry) {
             $user = $this->container->factory->userFromID($entry['user']);
             $subjects = $this->db->select('lists', [

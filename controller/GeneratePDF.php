@@ -44,7 +44,8 @@ abstract class GeneratePDF extends Controller
             'lists.level'
         ], [
             'ORDER' => 'subjects.id',
-            'lists.list' => $listID
+            'lists.list' => $listID,
+            'subjects.state' => 0
         ]);
 
         $qrURL = (string) $request

@@ -83,7 +83,7 @@ class Dash extends Controller
                 '[>]main' => ['list' => 'id']
             ], 'main.id', [
                 'lists.subject' => $entry['id'],
-                'main.state' => 2,
+                'main.state' => [2, 3],
                 'main.version' => $this->settings['active_version_' . $year],
                 'lists.level' => 0
             ]);
@@ -93,7 +93,7 @@ class Dash extends Controller
                 '[>]main' => ['list' => 'id']
             ], 'main.id', [
                 'lists.subject' => $entry['id'],
-                'main.state' => 2,
+                'main.state' => [2, 3],
                 'main.version' => $this->settings['active_version_' . $year],
                 'lists.level' => 0
             ]);
@@ -102,9 +102,9 @@ class Dash extends Controller
                 '[>]main' => ['list' => 'id']
             ], 'lists.list', [
                 'lists.subject' => $entry['id'],
-                'main.state' => 2,
+                'main.state' => [2, 3],
                 'main.version' => $this->settings['active_version_' . $year],
-                'lists.level' => 1
+                'lists.level' => [1, 2]
             ]);
         }
 

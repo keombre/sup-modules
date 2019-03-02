@@ -37,8 +37,7 @@
             "user": "INTEGER",
             "created": "INTEGER",
             "state": "INTEGER DEFAULT 0",
-            "version": "INTEGER",
-            "accepted_by": "INTEGER NULL"
+            "version": "INTEGER"
         },
         "lists": {
             "list": "INTEGER",

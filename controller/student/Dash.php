@@ -13,18 +13,11 @@ class Dash extends Controller
         $list = $this->db->get('main', [
             'id [Index]',
             'created [Int]',
-            'state [Int]',
-            'accepted_by [Int]'
+            'state [Int]'
         ], [
             'user' => $this->container->auth->getUser()->getID(),
             'version' => $this->settings['active_version']
         ]);
-
-        if ($list) {
-            if ($list['state'] == 2) {
-                $list['accepted_by'] = $this->container->factory->userFromID($list['accepted_by']);
-            }
-        }
 
         $limit = $this->db->get('versions', ['limit [Int]'], ['id' => $this->settings['active_version']])['limit'];
 

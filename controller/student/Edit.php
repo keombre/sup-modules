@@ -136,11 +136,11 @@ class Edit extends Controller
             }
         }
 
-        $limit = $this->db->get('versions', ['limit [Int]'], ['id' => $this->settings['active_version']]);
+        $limit = $this->db->get('versions', ['limit [Int]', 'limit_spare [Int]'], ['id' => $this->settings['active_version']]);
 
         $this->sendResponse($request, $response, "student/edit.phtml", [
             "state" => $state,
-            "counts" => [$selectedCount, $limit['limit'], $spareCount],
+            "counts" => [$selectedCount, $limit['limit'], $spareCount, $limit['limit_spare']],
             "subjects" => $subjects,
             "listID" => $this->listID
         ]);
