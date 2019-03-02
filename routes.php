@@ -34,14 +34,7 @@ class Routes
                 $this->get('', controller\teacher\Dash::class)
                 ->setName('subjects-teacher');
 
-                $this->map(['GET', 'PUT'], '/accept[/{id}]', controller\teacher\Accept::class)
-                ->setName('subjects-teacher-accept')
-                ->add(middleware\teacher\OpenAccepting::class);
-                
-                $this->get('/view', controller\teacher\View::class)
-                ->setName('subjects-teacher-view');
-
-                $this->get('/generate/{id}', controller\teacher\Generate::class)
+                $this->get('/download/{version}[/{type}]', controller\admin\export\Download::class)
                 ->setName('subjects-teacher-generate');
             })
             ->add(\middleware\auth\teacher::class);
