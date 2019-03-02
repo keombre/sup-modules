@@ -13,19 +13,23 @@ class Edit extends Controller
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        
-        if (\array_key_exists('id', $args)) {
-            $this->listID = \filter_var($args['id'], \FILTER_SANITIZE_STRING);
 
-            if (!$this->db->has('main', ['id' => $this->listID, 'version' => $this->settings['active_version']])) {
-                return $this->redirectWithMessage($response, 'subjects-student', "error", [
-                    $this->container->lang->g('notfound', 'student-edit')
-                ]); 
-            }
+        $this->listID = $this->db->get('main', ['id'], ['user' => $this->container->auth->getUser()->getID()])['id'];
 
-            if ($this->db->get('main', ['state'], ['id' => $this->listID, 'version' => $this->settings['active_version']])['state'] != 0) {
-                return $response->withRedirect($this->container->router->pathFor('subjects-student-preview', ['id' => $this->listID]), 301);
-            }
+        if (is_null($this->listID)) {
+            $this->listID = $this->getListID();
+            $this->db->insert('main', [
+                'id' => $this->listID,
+                'user' => $this->container->auth->getUser()->getID(),
+                'created' => time(),
+                'state' => 0,
+                'version' => $this->settings['active_version']
+            ]);
+        }
+
+        $state = $this->db->get('main', ['state'], ['id' => $this->listID, 'version' => $this->settings['active_version']])['state'];
+        if ($state == 1 || $state == 2) {
+            return $response->withRedirect($this->container->router->pathFor('subjects-student-preview', ['id' => $this->listID]), 301);
         }
 
         $subjects = $this->db->select('subjects', [
@@ -39,8 +43,6 @@ class Edit extends Controller
 
         if ($request->isPut()) {
 
-            $listID = $this->listID ?? $this->getListID();
-
             $data = $request->getParsedBody();
 
             if (!\array_key_exists('subject', $data) || !\array_key_exists('action', $data)) {
@@ -50,7 +52,10 @@ class Edit extends Controller
             $subject = \filter_var($data['subject'], \FILTER_SANITIZE_STRING);
             $action  = \filter_var($data['action'], \FILTER_SANITIZE_STRING);
 
-            if (!\array_key_exists($subject, $subjects)) {
+            if (
+                !\array_key_exists($subject, $subjects) || 
+                ($state == 3 && $this->db->has('lists', ['list' => $this->listID, 'level' => 0, 'subject' => $subject]))
+            ) {
                 return $this->invalidRequest($response);
             }
             
@@ -58,16 +63,16 @@ class Edit extends Controller
                 case 'enrol':
                     $this->cleanPrevious($subject);
                     $this->db->insert('lists', [
-                        'list' => $listID,
+                        'list' => $this->listID,
                         'subject' => $subject,
-                        'level' => 0
+                        'level' => $state == 3 ? 3 : 0
                     ]);
                     break;
                 case 'spare1':
                     $this->cleanPrevious($subject);
                     $this->cleanSpare(1);
                     $this->db->insert('lists', [
-                        'list' => $listID,
+                        'list' => $this->listID,
                         'subject' => $subject,
                         'level' => 1
                     ]);
@@ -76,7 +81,7 @@ class Edit extends Controller
                     $this->cleanPrevious($subject);
                     $this->cleanSpare(2);
                     $this->db->insert('lists', [
-                        'list' => $listID,
+                        'list' => $this->listID,
                         'subject' => $subject,
                         'level' => 2
                     ]);
@@ -84,9 +89,9 @@ class Edit extends Controller
                 case 'cancel':
                     $this->cleanPrevious($subject);
                     if ($this->db->count('lists', [
-                        'list' => $listID
+                        'list' => $this->listID
                     ]) == 0) {
-                        $this->db->delete('main', ['id' => $listID]);
+                        $this->db->delete('main', ['id' => $this->listID]);
                         return $response->withRedirect($this->container->router->pathFor('subjects-student-edit'), 301);
                     }
                     break;
@@ -95,15 +100,15 @@ class Edit extends Controller
                     return $this->invalidRequest($response);
             }
 
-            if (!\array_key_exists('id', $args) && $this->db->count('lists', ['list' => $listID]) > 0) {
+            if (!\array_key_exists('id', $args) && $this->db->count('lists', ['list' => $this->listID]) > 0) {
                 $this->db->insert('main', [
-                    'id' => $listID,
+                    'id' => $this->listID,
                     'user' => $this->container->auth->getUser()->getID(),
                     'created' => time(),
                     'state' => 0,
                     'version' => $this->settings['active_version']
                 ]);
-                return $response->withRedirect($this->container->router->pathFor('subjects-student-edit', ['id' => $listID]), 301);
+                return $response->withRedirect($this->container->router->pathFor('subjects-student-edit'), 301);
             }
         }
 
@@ -124,9 +129,9 @@ class Edit extends Controller
         foreach ($subjects as $id => $subject) {
             $subjects[$id]['level'] = $selected[$id]['level'] ?? false;
 
-            if (($selected[$id]['level'] ?? false) === 0) {
+            if (($selected[$id]['level'] ?? false) === 0 || ($selected[$id]['level'] ?? false) == 3) {
                 $selectedCount++;
-            } else if (($selected[$id]['level'] ?? false) >= 1) {
+            } else if (($selected[$id]['level'] ?? false) == 1 || ($selected[$id]['level'] ?? false) == 2) {
                 $spareCount++;
             }
         }
@@ -134,6 +139,7 @@ class Edit extends Controller
         $limit = $this->db->get('versions', ['limit [Int]'], ['id' => $this->settings['active_version']]);
 
         $this->sendResponse($request, $response, "student/edit.phtml", [
+            "state" => $state,
             "counts" => [$selectedCount, $limit['limit'], $spareCount],
             "subjects" => $subjects,
             "listID" => $this->listID
@@ -144,8 +150,6 @@ class Edit extends Controller
     {
         return $this->redirectWithMessage($response, 'subjects-student-edit', "error", [
             $this->container->lang->g('error', 'student-edit')
-        ], [
-            'id' => $this->listID
         ]);
     }
 

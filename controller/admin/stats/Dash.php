@@ -30,7 +30,7 @@ class Dash extends Controller
         } else if ($request->isPut()) {
             $entries = [];
             foreach ($this->db->select('main', [
-                'id [Index]',
+                'id [Index]'
             ], [
                 'version' => [
                     $this->settings['active_version_7'],
@@ -44,11 +44,9 @@ class Dash extends Controller
                     'lists.list' => $entry['id'],
                     'subjects.state' => 1
                 ])) {
-                    $this->db->update('main', [
-                        'state' => 3
-                    ], [
-                        'id' => $entry['id']
-                    ]);
+                    $this->db->update('main', ['state' => 3], ['id' => $entry['id']]);
+                } else {
+                    $this->db->update('main', ['state' => 2], ['id' => $entry['id']]);
                 }
             }
             return $this->redirectWithMessage($response, 'subjects-admin-stats-dash', "status", [

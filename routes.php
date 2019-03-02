@@ -16,7 +16,7 @@ class Routes
                 $this->get('', controller\student\Dash::class)
                 ->setName('subjects-student');
 
-                $this->map(['GET', 'PUT'], '/edit[/[{id}]]', controller\student\Edit::class)
+                $this->map(['GET', 'PUT'], '/edit', controller\student\Edit::class)
                 ->setName('subjects-student-edit');
                 
                 $this->map(['GET', 'PUT'], '/preview/{id}', controller\student\Preview::class)

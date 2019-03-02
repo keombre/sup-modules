@@ -25,11 +25,15 @@ class Preview extends Controller
         }
 
         if ($request->isPut()) {
-            if ($state['state'] == 0) {    
+            if ($state['state'] == 0 || $state['state'] == 3) {    
                 $this->db->update('main', ['state' => 1], [
                     'id' => $listID,
                     'version' => $this->settings['active_version']
                 ]);
+
+                if ($state['state'] == 3) {
+                    $this->db->update('lists', ['level' => 0], ['level' => 3, 'list' => $listID]);
+                }
 
                 return $this->redirectWithMessage($response, 'subjects-student-preview', "status", [
                     $this->container->lang->g('success-sent', 'student-preview')

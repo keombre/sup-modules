@@ -19,7 +19,7 @@
                 <a class="btn btn-default" href="<?=$router->pathFor('subjects-student')?>"><?=$lang->g('back', 'student-preview')?></a>
             </div>
         </div>
-        <?php elseif ($state == 0):?>
+        <?php elseif ($state == 0 || $state == 3):?>
         <div class="col-sm-3">
             <div class="btn-group pull-right">
                 <button class="btn btn-success" onclick="document.getElementById('send').submit()"><?=$lang->g('send', 'student-preview')?></button>
