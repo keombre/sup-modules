@@ -1,7 +1,7 @@
 <?php require __dir__."/sidebar/header.phtml"?>
 
 <h1 class="page-header">Dashboard</h1>
-<div class="row">
+<!--div class="row">
 <div class="col-xs-6 col-sm-3 col-sm-offset-1 col-md-offset-2 placeholder">
     <div id="piechart1" style="width: 200px; height: 200px;"></div>
     <h4>Stav zápisů</h4>
@@ -13,7 +13,7 @@
     <span class="text-muted">Které byly vypsány</span>
 </div>
 </div>
-<br />
+<br /-->
 <h2 class="sub-header">Problémové zápisy</h2>
 <?php if (is_array(@$problems) && count($problems)):?>
 <div class="table-responsive">
@@ -29,7 +29,7 @@
     <tbody>
     <?php foreach ($problems as $entry):?>
     <tr>
-        <td><a href="<?=$router->pathFor('subjects-admin-subjects-edit', ['id' => $entry['id']])?>"><?=$entry['id']?></a></td>
+        <td><a href="<?=$router->pathFor('subjects-admin-entries-edit', ['id' => $entry['id']])?>"><?=$entry['id']?></a></td>
         <td><?=$entry['user']->getAnyName()?></td>
         <td><?=$entry['user']->getLocalisedClass()?></td>
         <td><?=$entry['invalid']?></td>

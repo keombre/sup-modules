@@ -14,7 +14,10 @@ class Edit extends Controller
     public function __invoke(Request $request, Response $response, $args)
     {
 
-        $this->listID = $this->db->get('main', ['id'], ['user' => $this->container->auth->getUser()->getID()])['id'];
+        $this->listID = $this->db->get('main', ['id'], [
+            'user' => $this->container->auth->getUser()->getID(),
+            'version' => $this->settings['active_version']
+        ])['id'];
 
         if (is_null($this->listID)) {
             $this->listID = $this->getListID();
@@ -154,6 +157,10 @@ class Edit extends Controller
 
     private function checkTime($state) {
         $limit = $this->db->get('versions', ['timer1 [JSON]', 'timer2 [JSON]'], ['id' => $this->settings['active_version']]);
+
+        if (is_null($limit['timer1']) || is_null($limit['timer2'])) {
+            return false;
+        }
 
         $times = [
             1 => [
