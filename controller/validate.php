@@ -47,8 +47,8 @@ class validate extends lists {
         $regionCounter = [];
         $authorCounter = [];
 
-        $genereInfo = $this->container->db->select("generes", ['id [Index]']);
-        $regionInfo = $this->container->db->select("regions", ['id [Index]']);
+        $genereInfo = $this->container->db->select("generes", ['id [Index]', 'name [String]', 'min [Int]', 'max [Int]']);
+        $regionInfo = $this->container->db->select("regions", ['id [Index]', 'name [String]', 'min [Int]', 'max [Int]']);
 
         foreach ($genereInfo as $genere)
             $genereCounter[$genere['id']] = 0;
