@@ -1,51 +1,108 @@
+<style>
+.progress {
+    position: relative;
+    height: 30px;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: #24282e;
+    line-height: 30px;
+    font-size: 14px;
+}
+</style>
+
 <h3><?=$lang->g('title', 'student-dash')?></h3>
 <hr />
-<p>
+
+<?php
+if ($action_type == 1 || $action_type == 2 || $action_type == 3) {
+  $start = strtotime(implode(' ', $date_since));
+  $end = strtotime(implode(' ', $date_to));
+  $progress = intVal((time() - $start) / ($end - $start) * 100);
+  if ($progress > 100) $progress = 100;
+} else {
+  $progress = 0;
+}
+?>
+
+<div class="col-md-12">
+  <?php if (is_array($date_since)):?>
+  <span>Od <?=date('<b>j. n. o</b> (G:i)', strtotime(implode(' ', $date_since)))?></span>
+  <?php endif; if (is_array($date_to)):?>
+  <span class="pull-right">Do <?=date('<b>j. n. o</b> (G:i)', strtotime(implode(' ', $date_to)))?></span>
+  <?php endif;?>
+</div>
+
+<div class="col-md-12">
+<div class="progress">
+  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="<?=$progress?>" aria-valuemin="0" aria-valuemax="100" style="width: <?=$progress?>%">
+  <span>
+  <?=
+[
+    'Příprava na přihlašování seminářů',
+    '1. kolo zápisů',
+    'Vypisování předmětů',
+    '2. kolo zápisů',
+    'Úklid po zápisech'
+][$action_type]
+?>
+</span>
+  </div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="list-group">
+    <?php if ($action_type == 0):?>
+    <div class="list-group-item disabled">
+      <h1 class="list-group-item-heading">Zápis uzavřen</h1>
+      <p class="list-group-item-text">Vyčkejte než budou zápisy spuštěny</p>
+    </div>
+    <?php elseif (!is_array($list) || !count($list)):?>
+    <div class="list-group-item">
+      <h1 class="list-group-item-heading">Nový zápis</h1>
+      <p class="list-group-item-text">Pokračujte k vytvoření nového zápisu</p>
+    </div>
+    <?php elseif ($list['state'] == 0):?>
+    <div class="list-group-item list-group-item-info">
+      <h1 class="list-group-item-heading">Upravován</h1>
+      <p class="list-group-item-text">Po dokončení úprav zápis odešlete</p>
+    </div>
+    <?php elseif ($list['state'] == 1):?>
+    <div class="list-group-item active">
+      <h1 class="list-group-item-heading">Odeslán</h1>
+      <p class="list-group-item-text">Váš zápis čeká na kontrolu</p>
+    </div>
+    <?php elseif ($list['state'] == 2):?>
+    <div class="list-group-item list-group-item-success">
+      <h1 class="list-group-item-heading">Schválen</h1>
+      <p class="list-group-item-text">Zápis vytiskněte, podepište a doneste do školy</p>
+    </div>
+    <?php elseif ($list['state'] == 3):?>
+    <div class="list-group-item list-group-item-danger">
+      <h1 class="list-group-item-heading">Neschválen</h1>
+      <p class="list-group-item-text">Zápis upravte a znovu ho odešlete</p>
+    </div>
+    <?php endif;?>
+    <?php if ($action_type == 0):?>
+    <?php elseif (!is_array($list) || !count($list)):?>
+        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-edit')?>'>Vytvořit nový zápis</a>
+    <?php elseif (($list['state'] == 0 || $list['state'] == 3) && ($action_type == 1 || $action_type == 3)):?>
+        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-edit')?>'>Přejít k úpravě</a>
+    <?php elseif ($list['state'] == 1 || $list['state'] == 2):?>
+        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-preview', ['id' => $list['id']])?>'>Zobrazit zápis</a>
+    <?php endif;?>
+  </div>
+</div>
+
+<div class="col-md-8">
 <?=$lang->g('longText', 'student-dash', [
     'count' => $limit['limit'],
     'count_spare' => $limit['limit_spare'],
     'hours' => $limit['limit'] * 2,
-    'date_close_1' => date('j. n. o (G:i)', strtotime(implode(' ', $limit['timer1']['open'])))
+    'date_close_1' => date('j. n. o (G:i)', strtotime(implode(' ', $limit['timer1']['close'])))
 ])?>
-</p>
-
-<?php if ($action_type != 0):?>
-<?php if (is_array($list) && count($list)):?>
-    Stav zápisu: 
-
-    <?php if ($list['state'] == 0):?>
-        <?=$lang->g('list-state-new', 'student-dash')?>
-    <?php elseif ($list['state'] == 1):?>
-        <?=$lang->g('list-state-sent', 'student-dash')?>
-    <?php elseif ($list['state'] == 2):?>
-        <span style='margin-top: 2px;' class='label label-success'><?=$lang->g('list-state-accepted', 'student-dash')?></span>
-    <?php elseif ($list['state'] == 3):?>
-            <?=$lang->g('list-state-invalid', 'student-dash')?>
-    <?php endif;?>
-
-    <?php if (($list['state'] == 0 || $list['state'] == 3) && ($action_type == 1 || $action_type == 3)):?>
-        <a href='<?=$router->pathFor('subjects-student-edit')?>'>Přejít k úpravě</a>
-    <?php elseif ($list['state'] == 1 || $list['state'] == 2):?>
-        <a href='<?=$router->pathFor('subjects-student-preview', ['id' => $list['id']])?>'>Zobrazit zápis</a>
-    <?php endif;?>
-
-<?php else:?>
-    <span class='text-muted'><?=$lang->g('list-empty', 'student-dash')?></span>
-    <a href="<?=$router->pathFor('subjects-student-edit');?>"><span class="glyphicon glyphicon-plus"></span> <?=$lang->g('list-new', 'student-dash')?></a>
-<?php endif;?>
-<?php endif;?>
-<br />
-<br />
-Aktuálně probíhá <?=
-[
-    'příprava na přihlašování seminářů',
-    '1. kolo zápisů',
-    'vypisování předmětů',
-    '2. kolo zápisů',
-    'úklid po zápisech'
-][$action_type]
-?>
-<br />
-Od <?=date('j. n. o (G:i)', strtotime(implode(' ', $date_since)))?>
-<br />
-Do <?=date('j. n. o (G:i)', strtotime(implode(' ', $date_to)))?>
+</div>

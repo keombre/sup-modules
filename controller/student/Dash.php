@@ -38,7 +38,7 @@ class Dash extends Controller
             
             if ($times[1]['open'] > time()) {
                 $action_type = 0;
-                $date_since = ['time' => '', 'date' => ''];
+                $date_since = null;
                 $date_to = $limit['timer1']['open'];
             } else if ($times[1]['close'] > time()) {
                 $action_type = 1;
@@ -55,7 +55,7 @@ class Dash extends Controller
             } else {
                 $action_type = 4;
                 $date_since = $limit['timer2']['close'];
-                $date_to = ['time' => '', 'date' => ''];
+                $date_to = null;
             }
         }
 
