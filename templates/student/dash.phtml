@@ -89,11 +89,11 @@ if ($action_type == 1 || $action_type == 2 || $action_type == 3) {
     <?php endif;?>
     <?php if ($action_type == 0):?>
     <?php elseif (!is_array($list) || !count($list)):?>
-        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-edit')?>'>Vytvořit nový zápis</a>
+        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-edit')?>'><b>Vytvořit nový zápis</b></a>
     <?php elseif (($list['state'] == 0 || $list['state'] == 3) && ($action_type == 1 || $action_type == 3)):?>
-        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-edit')?>'>Přejít k úpravě</a>
+        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-edit')?>'><b>Přejít k úpravě</b></a>
     <?php elseif ($list['state'] == 1 || $list['state'] == 2):?>
-        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-preview', ['id' => $list['id']])?>'>Zobrazit zápis</a>
+        <a class="list-group-item" href='<?=$router->pathFor('subjects-student-preview', ['id' => $list['id']])?>'><b>Zobrazit zápis</b></a>
     <?php endif;?>
   </div>
 </div>
