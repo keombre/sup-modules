@@ -50,7 +50,7 @@ class Upload extends Controller
         $save = [];
         foreach ($parsed as $entry) {
             array_push($save, [
-                "code"      => intval($entry[0]),
+                "code"      => trim($entry[0]),
                 "name"      => trim($entry[1]),
                 "annotation" => trim($entry[2]),
                 "version"   => $version
@@ -83,7 +83,7 @@ class Upload extends Controller
             if (\count($data) != 3) {
                 return $line + 1;
             }
-            if (!\is_numeric($data[0]) ||
+            if (!\is_string($data[0]) ||
                 !\is_string($data[1]) ||
                 !\is_string($data[2])
             ) {
