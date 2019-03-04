@@ -3,6 +3,7 @@
 <p>
 <?=$lang->g('longText', 'student-dash', [
     'count' => $limit['limit'],
+    'count_spare' => $limit['limit_spare'],
     'hours' => $limit['limit'] * 2,
     'date_close_1' => $limit['timer1']['close']['date'] . ' ' . $limit['timer1']['close']['time']
 ])?>
@@ -37,7 +38,7 @@
 <br />
 Aktuálně probíhá <?=
 [
-    'příprava na otevření zápisů',
+    'příprava na přihlašování seminářů',
     '1. kolo zápisů',
     'vypisování předmětů',
     '2. kolo zápisů',

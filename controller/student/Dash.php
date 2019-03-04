@@ -18,8 +18,7 @@ class Dash extends Controller
             'user' => $this->container->auth->getUser()->getID(),
             'version' => $this->settings['active_version']
         ]);
-
-        $limit = $this->db->get('versions', ['limit [Int]', 'timer1 [JSON]', 'timer2 [JSON]'], ['id' => $this->settings['active_version']]);
+        $limit = $this->db->get('versions', ['limit [Int]', 'limit_spare [Int]', 'timer1 [JSON]', 'timer2 [JSON]'], ['id' => $this->settings['active_version']]);
         
         if (is_null($limit['timer1']) || is_null($limit['timer2'])) {
             $action_type = 0;
