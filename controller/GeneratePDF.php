@@ -47,12 +47,9 @@ abstract class GeneratePDF extends Controller
             'lists.list' => $listID,
             'subjects.state' => 0
         ]);
-
-        $qrURL = (string) $request
-            ->getUri()
-            ->withPath($this->container->router->pathFor("subjects-teacher-accept", ["id" => $listID]))
-            ->withQuery(http_build_query(['b' => base64_encode(implode('-', array_column($subjects, 'id')))]))
-            ->withFragment("");
+        
+        
+        $qrURL = $listID . ':' . implode('-', array_column($subjects, 'id'));
 
         $subjects = \array_map(function ($e) {
             return [
@@ -62,7 +59,9 @@ abstract class GeneratePDF extends Controller
             ];
         }, $subjects);
 
-        $versionName = $this->db->get('versions', 'name', ['id' => $listInfo['version']]);
+        //$versionName = $this->db->get('versions', 'name', ['id' => $listInfo['version']]);
+
+        $versionName = date("Y");
 
         $generator = new \SUP\PDF\Generate($this->container, $this->container->lang->g('title', 'pdf'), $versionName);
         $generator->setContent(substr_replace($listID, ' - ', 3, 0), $listID, $qrURL, $user);

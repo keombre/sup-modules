@@ -1,6 +1,6 @@
 <?php require __dir__."/../sidebar/header.phtml"?>
 
-<h1 class="page-header">Uzavírání předmětů</h1>
+<h1 class="page-header">Vyřazování seminářů</h1>
 
 <h2 class="sub-header">3. ročník</h2>
 <?php if (is_array(@$entries3) && count($entries3)):?>
@@ -57,9 +57,9 @@
         <td><?=$entry['name']?></td>
         <td><?=$entry['entries']?>/<?=$entry['entries_spare']?></td>
 <?php if ($entry['state'] == 0):?>
-        <td><button onclick="sendClose(<?=$entry['id']?>, <?=$version4?>)" class="btn btn-danger btn-xs">Uzavřít</button></td>
+        <td><button onclick="sendClose(<?=$entry['id']?>, <?=$version4?>)" class="btn btn-danger btn-xs">Vyřadit</button></td>
 <?php else:?>
-        <td><button onclick="sendOpen(<?=$entry['id']?>, <?=$version4?>)" class="btn btn-success btn-xs">Otevřít</button></td>
+        <td><button onclick="sendOpen(<?=$entry['id']?>, <?=$version4?>)" class="btn btn-success btn-xs">Zařadit</button></td>
 <?php endif;?>
     </tr>
     <?php endforeach;?>

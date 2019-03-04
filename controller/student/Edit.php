@@ -43,6 +43,7 @@ class Edit extends Controller
 
         $subjects = $this->db->select('subjects', [
             'id [Index]',
+            'code [String]',
             'name [String]',
             'annotation [String]'
         ], [

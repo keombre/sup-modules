@@ -35,7 +35,7 @@
                 <?php if (is_numeric($subject['level'])):?>
                     <small style="margin-bottom: 9px;display: inline-block;"><?=$lang->g('enroled-as-' . $subject['level'], 'student-edit')?></small><br />
                 <?php endif;?>
-                <b><?=$subject['name']?></b>
+                <b><i><?=$subject['code']?></i> <?=$subject['name']?></b>
                 </h4>
                 <p class="list-group-item-text">
                     <?=str_replace('\n', '<br /><br />', $subject['annotation'])?>
