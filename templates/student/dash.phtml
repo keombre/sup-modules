@@ -5,7 +5,7 @@
     'count' => $limit['limit'],
     'count_spare' => $limit['limit_spare'],
     'hours' => $limit['limit'] * 2,
-    'date_close_1' => $limit['timer1']['close']['date'] . ' ' . $limit['timer1']['close']['time']
+    'date_close_1' => date('j. n. o (G:i)', strtotime(implode(' ', $limit['timer1']['open'])))
 ])?>
 </p>
 
@@ -46,6 +46,6 @@ Aktuálně probíhá <?=
 ][$action_type]
 ?>
 <br />
-Od <?=$date_since['date']?> <?=$date_since['time']?>
+Od <?=date('j. n. o (G:i)', strtotime(implode(' ', $date_since)))?>
 <br />
-Do <?=$date_to['date']?> <?=$date_to['time']?>
+Do <?=date('j. n. o (G:i)', strtotime(implode(' ', $date_to)))?>

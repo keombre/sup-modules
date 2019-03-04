@@ -23,9 +23,9 @@
         <td><?=$entry['name']?></td>
         <td><?=$entry['entries']?>/<?=$entry['entries_spare']?></td>
 <?php if ($entry['state'] == 0):?>
-        <td><button onclick="sendClose(<?=$entry['id']?>, <?=$version3?>)" class="btn btn-danger btn-xs">Uzavřít</button></td>
+        <td><button onclick="sendClose(<?=$entry['id']?>, <?=$version3?>)" class="btn btn-danger btn-xs">Vyřadit</button></td>
 <?php else:?>
-        <td><button onclick="sendOpen(<?=$entry['id']?>, <?=$version3?>)" class="btn btn-success btn-xs">Otevřít</button></td>
+        <td><button onclick="sendOpen(<?=$entry['id']?>, <?=$version3?>)" class="btn btn-success btn-xs">Zařadit</button></td>
 <?php endif;?>
     </tr>
     <?php endforeach;?>
