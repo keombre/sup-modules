@@ -32,12 +32,12 @@ class Download extends Controller {
 
         $header = $this->db->select('subjects', [
             'id [Index]',
-            'code [Int]'
+            'code [String]'
         ], [
             'version' => $version
         ]);
 
-        fputcsv($handle, array_merge([''], array_column($header, 'code', 'id')), $this->separator);
+        fputcsv($handle, array_merge(['Třída', 'Příjmení', 'Jméno'], array_column($header, 'code', 'id')), $this->separator);
 
         foreach ($this->db->select('main', [
             'id [Index]',
@@ -59,7 +59,9 @@ class Download extends Controller {
                 $data[$column['id']] = $this->lookup[$subjects[$column['id']]['level'] ?? -1];
             }
 
-            fputcsv($handle, array_merge([$user->getName()], $data), $this->separator);
+            $user_name = $user->getAttribute('name');
+
+            fputcsv($handle, array_merge([$user->getAttribute('class'), $user_name['sur'], $user_name['given']], $data), $this->separator);
         }
 
         return $this->sendStream($response, $handle, 'SUPi_export_' . str_replace(' ', '_', $versionName) . '.csv');
