@@ -10,7 +10,7 @@ class Dash extends Controller
 {
     public function __invoke(Request $request, Response $response, $args)
     {
-        
+
         $entries3 = $this->getEntries(7);
         $entries4 = $this->getEntries(8);
 
@@ -27,7 +27,7 @@ class Dash extends Controller
     {
         if ($year != 7 && $year != 8)
             return false;
-        
+
         $entries = [];
         foreach ($this->db->select('main', [
             'id [Index]',
@@ -44,6 +44,11 @@ class Dash extends Controller
                 ], 'subjects.id', [
                     'lists.list' => $entry['id'],
                     'subjects.state' => 1
+                ]),
+                'total' => $this->db->count('lists', [
+                    '[>]subjects' => ['subject' => 'id']
+                ], 'subjects.id', [
+                    'lists.list' => $entry['id']
                 ])
             ];
         }
