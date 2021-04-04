@@ -12,6 +12,7 @@
         <th>Jméno</th>
         <th>Třída</th>
         <th>Počet uzavřených předmětů</th>
+        <th>Zapsaných předmětů celkem</th>
     </tr>
     </thead>
     <tbody>
@@ -21,6 +22,7 @@
         <td><?=$entry['user']->getName()?></td>
         <td><?=$entry['user']->getAttribute('class')?></td>
         <td><?=$entry['invalid']?></td>
+        <td><?=$entry['total']?></td>
     </tr>
     <?php endforeach;?>
     </tbody>
@@ -40,6 +42,7 @@
         <th>Jméno</th>
         <th>Třída</th>
         <th>Počet uzavřených předmětů</th>
+        <th>Zapsaných předmětů celkem</th>
     </tr>
     </thead>
     <tbody>
@@ -49,6 +52,7 @@
         <td><?=$entry['user']->getName()?></td>
         <td><?=$entry['user']->getAttribute('class')?></td>
         <td><?=$entry['invalid']?></td>
+        <td><?=$entry['total']?></td>
     </tr>
     <?php endforeach;?>
     </tbody>
