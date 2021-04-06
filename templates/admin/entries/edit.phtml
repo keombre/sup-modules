@@ -11,6 +11,7 @@
         <th>Název</th>
         <th>Typ zápisu</th>
         <th>Otevřen?</th>
+        <th>Akce</th>
     </tr>
     </thead>
     <tbody>
@@ -20,12 +21,76 @@
         <td><?=$subject['name']?></td>
         <td><?=$subject['level'] == 0 ? 'Volitelný' : 'Náhradní'?></td>
         <td><?=$subject['state'] == 1 ? 'ne' : 'ano'?></td>
+        <td><button onclick="sendClose(<?=$subject['id']?>)" class="btn btn-danger btn-xs">Odstranit</button></td>
     </tr>
     <?php endforeach;?>
     </tbody>
 </table>
 </div>
 
-// todo: uložit (pozor zápis neprochází kontrolou)
+<div class="row">
+<h4>Přidat předmět</h4>
+
+<form method="post" action="<?=$router->pathFor('subjects-admin-entries-edit', ["id" => $list_id])?>">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name']?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value']?>">
+        <input type="hidden" name="_METHOD" value="PUT">
+
+        <div class="form-group col-md-6">
+                <label for="subject">Kód předmětu</label>
+                <input type="text" name="subject" class="form-control" id="subject">
+        </div>
+
+        <div class="form-group col-md-6">
+                <label for="level">Typ zápisu</label>
+                <select class="form-control" name="level" id="level">
+                        <option value="0">Volitelný</option>
+                        <option value="1">Náhradní 1</option>
+                        <option value="2">Náhradní 2</option>
+                </select>
+        </div>
+        <div class="form-group col-md-3">
+                <input type="submit" class="form-control">
+        </div>
+</form>
+
+</div>
+<div class="row">
+
+<h4>Stav zápisu</h4>
+<form method="post" action="<?=$router->pathFor('subjects-admin-entries-edit', ["id" => $list_id])?>" class="form-inline">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name']?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value']?>">
+        <input type="hidden" name="_METHOD" value="POST">
+        <div class="form-group">
+                <label for="state">Stav</label>
+                <select name="state" class="form-control" id="state">
+                        <option value="0" <?=$state == 0 ? "selected" : ""?>>Upravován</option>
+                        <option value="1" <?=$state == 1 ? "selected" : ""?>>Odeslán</option>
+                        <option value="2" <?=$state == 2 ? "selected" : ""?>>Schválen</option>
+                        <option value="3" <?=$state == 3 ? "selected" : ""?>>Neschválen</option>
+                </select>
+        </div>
+        <div class="form-group">
+                <input type="submit" class="form-control" value="Aktualizovat stav">
+        </div>
+</form>
+
+</div>
+
+<form method="post" action="<?=$router->pathFor('subjects-admin-entries-edit', ["id" => $list_id])?>" id="form-rem">
+        <input type="hidden" name="<?= $csrf['nameKey'] ?>" value="<?= $csrf['name']?>">
+        <input type="hidden" name="<?= $csrf['valueKey'] ?>" value="<?= $csrf['value']?>">
+        <input type="hidden" name="_METHOD" value="DELETE">
+        <input type="hidden" name="id" id="form-id">
+</form>
+
+<script>
+function sendClose(id) {
+        document.getElementById('form-id').value = id
+        document.getElementById('form-rem').submit()
+}
+</script>
+
 
 <?php require __dir__."/../sidebar/footer.phtml"?>
