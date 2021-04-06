@@ -18,7 +18,7 @@ class Routes
 
                 $this->map(['GET', 'PUT'], '/edit', controller\student\Edit::class)
                 ->setName('subjects-student-edit');
-                
+
                 $this->map(['GET', 'PUT'], '/preview/{id}', controller\student\Preview::class)
                 ->add(middleware\student\Validate::class)
                 ->setName('subjects-student-preview');
@@ -49,10 +49,10 @@ class Routes
                     $this->get('', controller\admin\entries\Dash::class)
                     ->setName('subjects-admin-entries-dash');
 
-                    $this->map(['GET', 'PUT'], '/{id}', controller\admin\entries\Edit::class)
+                    $this->map(['GET', 'PUT', 'DELETE', 'POST'], '/{id}', controller\admin\entries\Edit::class)
                     ->setName('subjects-admin-entries-edit');
                 });
-                
+
                 $this->group('/subjects', function () {
                     $this->map(['GET', 'PUT'], '', controller\admin\subjects\Dash::class)
                     ->setName('subjects-admin-subjects-dash');
