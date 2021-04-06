@@ -28,9 +28,13 @@ class Dash extends Controller
                 "sidebar_active" => "stats"
             ]);
         } else if ($request->isPut()) {
+            $limit3 = $this->db->get('versions', ['limit [Int]', 'limit_spare [Int]'], ['id' => $this->settings['active_version_7']]);
+            $limit4 = $this->db->get('versions', ['limit [Int]', 'limit_spare [Int]'], ['id' => $this->settings['active_version_8']]);
+
             $entries = [];
             foreach ($this->db->select('main', [
-                'id [Index]'
+                    'id [Index]',
+                    'version [Int]'
             ], [
                 'version' => [
                     $this->settings['active_version_7'],
@@ -38,6 +42,31 @@ class Dash extends Controller
                 ],
                 'state[!]' => 0
             ]) as $entry) {
+
+            $subjects = $this->db->select('lists', ['[>]subjects' => ['subject' => 'id']], 'lists.level [Int]', ['lists.list' => $entry['id'], 'subjects.state' => 0]);
+            $counts = array_count_values($subjects);
+
+            if ($entry['version'] == 3) {
+                    if (!array_key_exists(0, $counts) || $counts[0] !== $limit3['limit']) {
+                            $this->db->update('main', ['state' => 3], ['id' => $entry['id']]);
+                            continue;
+                    }
+                    if (!array_key_exists(1, $counts) || ! array_key_exists(2, $counts) || $counts[1] + $counts[2] !== $limit3['limit_spare']) {
+                            $this->db->update('main', ['state' => 3], ['id' => $entry['id']]);
+                            continue;
+                    }
+            } else if ($entry['version'] == 4) {
+                    if (!array_key_exists(0, $counts) || $counts[0] !== $limit4['limit']) {
+                            $this->db->update('main', ['state' => 3], ['id' => $entry['id']]);
+                            continue;
+                    }
+                    if (!array_key_exists(1, $counts) || ! array_key_exists(2, $counts) || $counts[1] + $counts[2] !== $limit4['limit_spare']) {
+                            $this->db->update('main', ['state' => 3], ['id' => $entry['id']]);
+                            continue;
+                    }
+            }
+            $this->db->update('main', ['state' => 2], ['id' => $entry['id']]);
+/*
                 if ($this->db->has('lists', [
                     '[>]subjects' => ['subject' => 'id']
                 ], [
@@ -48,6 +77,7 @@ class Dash extends Controller
                 } else {
                     $this->db->update('main', ['state' => 2], ['id' => $entry['id']]);
                 }
+            */
             }
             return $this->redirectWithMessage($response, 'subjects-admin-stats-dash', "status", [
                 'Zápisy přepočítány'
@@ -68,7 +98,7 @@ class Dash extends Controller
     {
         if ($year != 7 && $year != 8)
             return false;
-        
+
         $entries = $this->db->select('subjects', [
             'id [Index]',
             'code [String]',
